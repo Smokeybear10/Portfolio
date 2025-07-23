@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Your Name • Math & Poker Enthusiast</title>
+  <title>Thomas Ou • Software Developer & Mathematician</title>
   <!-- Google Fonts for modern look -->
   <link href="https://fonts.googleapis.com/css?family=Montserrat:900,700,400|Inter:400,600&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Anton:wght@400&display=swap" rel="stylesheet">
@@ -77,58 +77,99 @@
         <span class="stat-label">Hours Worked</span>
       </div>
     </div>
-    <div id="scroll-arrow" class="scroll-arrow" style="opacity:0; pointer-events:none;">
-      <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M24 36L24 12" stroke="#1e90ff" stroke-width="4" stroke-linecap="round"/>
-        <path d="M36 28L24 40L12 28" stroke="#1e90ff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </div>
   </section>
 
   <!-- ABOUT -->
   <section id="about" class="panel">
     <div class="container">
-      <div class="about-quote-row">
-        <div class="about-quote" style="text-align:left">
-          <p>I believe many of today’s toughest challenges can be tackled through mathematics and algorithmic reasoning.</p>
+      <!-- Full-width quote -->
+      <div class="about-quote-full">
+        <p>I believe many of today's toughest challenges can be tackled through mathematics and algorithmic reasoning.</p>
+      </div>
+      
+      <!-- Main about content -->
+      <div class="about-intro-section">
           <div class="about-content">
             <div class="about-left">
               <h2>Hi, I'm Thomas.</h2>
               <div class="about-photo">
-                <img src="your-photo.jpg" alt="Your Photo" style="width:180px;height:180px;border-radius:50%;object-fit:cover;box-shadow:0 4px 24px rgba(0,0,0,0.18);background:#222;" />
+                <div class="photo-placeholder" style="width:180px;height:180px;border-radius:50%;background:linear-gradient(135deg, #1e90ff, #00c6fb);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(0,0,0,0.18);"><span style="color:white;font-size:3rem;font-weight:700;">TO</span></div>
               </div>
             </div>
             <div class="about-right">
-              <p>Welcome to my portfolio website.</p>
+              <p class="about-welcome">Welcome to my portfolio website.</p>
               <div style="height:1rem;"></div>
-              <p>I’m an undergraduate student who just really love poker and game theory. Fortunately, I’ve turned this love for strategic reasoning into something marketable. From machines learning to quantitive finance to scalable backend infrastructure, I’ve been able to create tools that learn, adapt, and perform.  I specialize in building full-stack systems and large language models.</p>
+              <p>I'm an undergraduate student who just really love poker and game theory. Fortunately, I've turned this love for strategic reasoning into something marketable. From machines learning to quantitive finance to scalable backend infrastructure, I've been able to create tools that learn, adapt, and perform.  I specialize in building full-stack systems and large language models.</p>
               <div style="height:1rem;"></div>
-              <p>This website primarily showcases my professional work—but it wouldn’t be complete without a glimpse of my hobbies. If interested, please see my journey in the nav bar.</p>
+              <a href="#journey" class="journey-btn">See My Journey <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M7 5l5 5-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            </div>
+          </div>
+      </div>
+      
+      <!-- Education section with more spacing -->
+      <div class="education-section">
+        <div class="education-content">
+          <div class="education-left">
+            <h2>Education</h2>
+          </div>
+          <div class="education-right">
+            <div class="education-item">
+              <div class="timeline-vertical">
+                <div class="degree-timeline">
+                  <div class="timeline-node"></div>
+                  <div>
+                    <h3>University of Pennsylvania</h3>
+                    <p class="degree" style="text-align:left;"><em>Bachelor of Arts in Mathematics</em></p>
+                    <p class="details"><strong>Relevant Coursework:</strong> Game Theory, Probability Theory, Mathematical Optimization, Advanced Calculus, Linear Algebra, Probability & Statistics, Mathematical Programming, Combinatorics, Financial Mathematics</p>
+                    <p class="degree" style="text-align:left;"><em>Master of Science in Engineering in Computer Science</em></p>
+                    <p class="details"><strong>Relevant Coursework:</strong> Artificial Intelligence, Machine Learning, Algorithms & Data Structures, Computer Systems, Scalable Backend Infrastructure, Programming Languages, Software Engineering</p>
+                  </div>
+                </div>
+                <div class="degree-timeline">
+                  <div class="timeline-node"></div>
+                  <div>
+                    <h3>University of Connecticut</h3>
+                    <p class="degree" style="text-align:left;"><em>Dual Enrollment</em></p>
+                    <p class="details"><strong>Coursework:</strong> HIST 1400 Modern Western Traditions, MATH 1131Q Calculus I, MATH 1132Q Calculus II, MATH 2110Q Multivariable Calculus</p>
+                  </div>
+                </div>
+                <div class="degree-timeline">
+                  <div class="timeline-node"></div>
+                  <div>
+                    <h3>Trumbull High School</h3>
+                    <p class="degree" style="text-align:left;"><em>High School Diploma</em></p>
+                    <p class="details">1590 SAT, Summa Cum Laude (Top 2%)</p>
+                    <p class="details"><strong>Coursework:</strong> General Studies</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- EDUCATION -->
-  <section id="education" class="panel">
-    <div class="container">
-      <div class="education-content">
-        <div class="education-left">
-          <h2>Education</h2>
-        </div>
-        <div class="education-right">
-          <div class="education-item">
-            <h3>University of Pennsylvania</h3>
-            <p class="degree">Bachelor of Science in Mathematics</p>
-            <p class="dates">2021 - 2025</p>
-            <p class="details">Focus on Game Theory, Probability Theory, and Mathematical Optimization. Relevant coursework includes Advanced Calculus, Linear Algebra, Probability & Statistics, and Mathematical Programming.</p>
-          </div>
-          <div class="education-item">
-            <h3>Relevant Coursework</h3>
-            <p class="details">Game Theory & Strategic Thinking, Mathematical Programming, Probability Theory, Statistical Inference, Linear Algebra, Advanced Calculus, Combinatorics, Financial Mathematics</p>
-          </div>
+      
+      <!-- My Stack section -->
+      <div class="stack-section">
+        <h2 class="stack-heading">My Stack</h2>
+        <div class="stack-grid">
+          <div class="tech">Python</div>
+          <div class="tech">JavaScript (ES6+)</div>
+          <div class="tech">TypeScript</div>
+          <div class="tech">React</div>
+          <div class="tech">Node.js</div>
+          <div class="tech">Express</div>
+          <div class="tech">Next.js</div>
+          <div class="tech">PostgreSQL</div>
+          <div class="tech">MongoDB</div>
+          <div class="tech">Docker</div>
+          <div class="tech">AWS</div>
+          <div class="tech">PyTorch</div>
+          <div class="tech">TensorFlow</div>
+          <div class="tech">Pandas</div>
+          <div class="tech">NumPy</div>
+          <div class="tech">Matplotlib</div>
+          <div class="tech">Git</div>
+          <div class="tech">Linux</div>
         </div>
       </div>
     </div>
@@ -136,7 +177,7 @@
 
   <!-- FOOTER -->
   <footer>
-    <p>© 2025 Your Name. Built with ❤️ and GSAP.</p>
+    <p>© 2025 Thomas Ou. Crafted with precision and GSAP.</p>
   </footer>
 
 </body>
