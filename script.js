@@ -1,16 +1,50 @@
 // HERO TEXT FADING & ROTATING ROLES
 const roles = [
-  "Frontend Developer",
+  "Frontend Dev",
   "Mathematician",
-  "AI / ML Engineer",
-  "Photographer",
+  "AI Engineer",
   "Statistical Analyst",
-  "Quantitative Researcher",
+  "Quant Analyst",
   "Poker Nerd"
 ];
 const typingDelay = 150, erasingDelay = 100, newTextDelay = 2000;
 let roleIndex = 0, charIndex = 0;
 const typedEl = document.querySelector(".typed-words");
+
+function typeRole() {
+  // Show cursor when typing starts
+  if (typedEl) {
+    typedEl.classList.add('typing');
+  }
+  
+  if (charIndex < roles[roleIndex].length) {
+    typedEl.textContent += roles[roleIndex].charAt(charIndex++);
+    setTimeout(typeRole, typingDelay);
+  } else {
+    // Hide cursor when typing stops
+    typedEl.classList.remove('typing');
+    setTimeout(eraseRole, newTextDelay);
+  }
+}
+
+function eraseRole() {
+  // Show cursor during erasing
+  if (typedEl) {
+    typedEl.classList.add('typing');
+  }
+  
+  if (charIndex > 0) {
+    typedEl.textContent = roles[roleIndex].substring(0, charIndex--);
+    setTimeout(eraseRole, erasingDelay);
+  } else {
+    roleIndex = (roleIndex + 1) % roles.length;
+    // Ensure text is completely cleared before starting new word
+    typedEl.textContent = "";
+    // Hide cursor briefly between words
+    typedEl.classList.remove('typing');
+    setTimeout(typeRole, typingDelay);
+  }
+}
 
 // HERO TITLE POP ANIMATION
 const heroTitleWords = [
@@ -174,26 +208,6 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 window.addEventListener('scroll', handleSectionPopAnimations);
 
-function typeRole() {
-  if (charIndex < roles[roleIndex].length) {
-    typedEl.textContent += roles[roleIndex].charAt(charIndex++);
-    setTimeout(typeRole, typingDelay);
-  } else {
-    setTimeout(eraseRole, newTextDelay);
-  }
-}
-
-function eraseRole() {
-  if (charIndex > 0) {
-    typedEl.textContent = roles[roleIndex].substring(0, charIndex--);
-    setTimeout(eraseRole, erasingDelay);
-  } else {
-    roleIndex = (roleIndex + 1) % roles.length;
-    // Ensure text is completely cleared before starting new word
-    typedEl.textContent = "";
-    setTimeout(typeRole, typingDelay);
-  }
-}
 document.addEventListener("DOMContentLoaded", () => {
   // Staggered fade-in animation from top to bottom
   const tl = gsap.timeline();
@@ -296,7 +310,7 @@ document.addEventListener("DOMContentLoaded", () => {
     heroBtn.style.boxShadow = `0 0 ${btnGlowIntensity * 3}px #1e90ff`;
   });
 
-  if (roles.length) setTimeout(typeRole, newTextDelay);
+  // Role typing will be triggered after bio typing completes
 
   // Smooth scrolling for About Me button and About nav link
   const aboutBtn = document.querySelector(".hero-btn");
@@ -313,187 +327,131 @@ document.addEventListener("DOMContentLoaded", () => {
   if (aboutBtn) aboutBtn.addEventListener("click", scrollToAbout);
   if (aboutNavLink) aboutNavLink.addEventListener("click", scrollToAbout);
 
-  // Section-by-section scrolling with incremental scrolling and snap
-  const sections = document.querySelectorAll('.panel');
-  let isScrolling = false;
-  let currentSectionIndex = 0;
-  let scrollThreshold = 10; // Much lower threshold for very controlled feel
-  let scrollAccumulator = 0;
-  let lastScrollTime = 0;
-
-  function scrollToSection(index) {
-    if (index >= 0 && index < sections.length) {
-      const targetSection = sections[index];
-      const targetPosition = targetSection.offsetTop;
-      
-      gsap.to(window, {
-        duration: 0.6, // Even faster, more controlled transition
-        scrollTo: { y: targetPosition, autoKill: false },
-        ease: "power1.out", // More controlled easing
-        onComplete: () => {
-          currentSectionIndex = index;
-        }
-      });
-    }
-  }
-
-  function handleWheel(e) {
-    const currentTime = Date.now();
+  // ANIMATION SETTINGS - Easy to adjust!
+  const ANIMATION_SETTINGS = {
+    // About page sequence timing
+    sectionScrollMultiplier: 0.8,    // How much of section height to use (0.5 = faster, 1.0 = slower)
+    startOffset: 0.15,               // When first element appears (0.0 = immediately, 0.2 = later) - increased to make quote appear later
+    elementSpacing: 0.12,            // Time between elements (0.1 = faster, 0.2 = slower) - reduced to make education appear sooner
+    popInSpeed: 0.08,                // How fast each element pops in (0.05 = faster, 0.1 = slower)
     
-    // Allow incremental scrolling but track for snapping
-    scrollAccumulator += Math.abs(e.deltaY);
-    
-    // If enough force is applied, snap to next section
-    if (scrollAccumulator >= scrollThreshold && !isScrolling && (currentTime - lastScrollTime) > 150) {
-      e.preventDefault();
-      isScrolling = true;
-      lastScrollTime = currentTime;
-      
-      if (e.deltaY > 0) {
-        // Scrolling down
-        scrollToSection(currentSectionIndex + 1);
-      } else {
-        // Scrolling up
-        scrollToSection(currentSectionIndex - 1);
-      }
-      
-      // Reset accumulator
-      scrollAccumulator = 0;
-      
-      setTimeout(() => {
-        isScrolling = false;
-      }, 800); // Shorter cooldown for more controlled feel
-    }
-    
-    // Reset accumulator if no scroll for a while
-    setTimeout(() => {
-      scrollAccumulator = 0;
-    }, 100); // Even shorter reset time
-  }
+    // Animation properties
+    animationDuration: 0.6,          // Duration of pop-in animation
+    popInDistance: 30,               // How far elements move when popping in
+    quoteFadeAmount: 0.7             // How much quote fades out (0.5 = more visible, 1.0 = invisible)
+  };
 
-  // Initialize current section and fade in first section
-  function updateCurrentSection() {
-    const scrollPosition = window.scrollY + window.innerHeight / 2;
-    
-    sections.forEach((section, index) => {
-      const sectionTop = section.offsetTop;
-      const sectionBottom = sectionTop + section.offsetHeight;
-      const sectionMiddle = sectionTop + section.offsetHeight / 2; // Half of section
-      const sectionThreeQuarter = sectionTop + (section.offsetHeight * 0.75); // 3/4 of section
-      
-      // Check if we're past 3/4 of the way into this section
-      if (scrollPosition >= sectionThreeQuarter && scrollPosition < sectionBottom) {
-        if (currentSectionIndex !== index) {
-          currentSectionIndex = index;
-        }
-      }
-    });
-  }
-
-  // Individual word fade effects based on viewport position
+  // Sequential pop-in/pop-out animations with specific order for about page
   function updateWordVisibility() {
     const viewportTop = window.scrollY;
     const viewportBottom = window.scrollY + window.innerHeight;
     const viewportCenter = window.scrollY + window.innerHeight / 2;
+    const viewportHeight = window.innerHeight;
     
-    // Get all text elements across all sections
-    const allTextElements = document.querySelectorAll('h1, h2, h3, p, .hero-btn, .typed-words');
+    // Define the specific about page sequence
+    const aboutSequence = [
+      { selector: '.about-quote-full p', name: 'quote' },
+      { selector: '.about-left h2', name: 'greeting' },
+      { selector: '.about-photo', name: 'photo' },
+      { selector: '.about-welcome', name: 'welcome' },
+      { selector: '.about-right p:not(.about-welcome)', name: 'description' },
+      { selector: '.journey-btn', name: 'button' },
+      { selector: '.education-left h2, .education-right', name: 'education' }
+    ];
     
-    allTextElements.forEach(element => {
+    // Handle about page sequence
+    const aboutSection = document.getElementById('about');
+    if (aboutSection) {
+      const aboutRect = aboutSection.getBoundingClientRect();
+      const aboutProgress = Math.max(0, Math.min(1, (viewportHeight - aboutRect.top) / (aboutRect.height * ANIMATION_SETTINGS.sectionScrollMultiplier)));
+      
+      aboutSequence.forEach((item, index) => {
+        const elements = document.querySelectorAll(item.selector);
+        const triggerPoint = ANIMATION_SETTINGS.startOffset + (index * ANIMATION_SETTINGS.elementSpacing);
+        const fadeOutPoint = Math.min(1, triggerPoint + 0.15);
+        
+        elements.forEach(element => {
+          let targetOpacity = 0;
+          let targetY = ANIMATION_SETTINGS.popInDistance;
+          let targetScale = 0.95;
+          
+          // Pop in when scroll reaches trigger point
+          if (aboutProgress >= triggerPoint) {
+            const popInProgress = Math.max(0, Math.min(1, (aboutProgress - triggerPoint) / ANIMATION_SETTINGS.popInSpeed));
+            
+            // Special handling for quote (fades out when photo appears)
+            if (item.name === 'quote' && aboutProgress >= (ANIMATION_SETTINGS.startOffset + (2 * ANIMATION_SETTINGS.elementSpacing))) {
+              const fadeOutProgress = Math.max(0, Math.min(1, (aboutProgress - fadeOutPoint) / ANIMATION_SETTINGS.popInSpeed));
+              targetOpacity = 1 - (fadeOutProgress * ANIMATION_SETTINGS.quoteFadeAmount);
+              targetY = -fadeOutProgress * 20;
+              targetScale = 1 - (fadeOutProgress * 0.03);
+            } else {
+              // Normal pop-in animation
+              targetOpacity = popInProgress;
+              targetY = ANIMATION_SETTINGS.popInDistance * (1 - popInProgress);
+              targetScale = 0.95 + (0.05 * popInProgress);
+            }
+          }
+          
+          // Apply animation
+          gsap.to(element, {
+            opacity: targetOpacity,
+            y: targetY,
+            scale: targetScale,
+            duration: ANIMATION_SETTINGS.animationDuration,
+            ease: "back.out(1.4)",
+            overwrite: true
+          });
+        });
+      });
+    }
+    
+    // Handle other page elements with standard fade animation
+    const otherElements = document.querySelectorAll('h1, h2, h3, p, .journey-btn, .typed-words, .tech');
+    
+    otherElements.forEach(element => {
+      // Skip about page elements (already handled above)
+      if (element.closest('#about')) return;
+      
       const rect = element.getBoundingClientRect();
       const elementTop = rect.top + window.scrollY;
-      const elementBottom = elementTop + rect.height;
       const elementCenter = elementTop + rect.height / 2;
       
-      // Check if element is in viewport with stricter conditions
-      const isInView = elementBottom > viewportTop + 100 && elementTop < viewportBottom - 100; // More prominent in view
-      const isNearCenter = Math.abs(elementCenter - viewportCenter) < window.innerHeight / 4; // Much closer to center
+      // Standard fade zones for non-about elements
+      const topFadeZone = viewportTop + (viewportHeight * 0.2);
+      const bottomFadeZone = viewportBottom - (viewportHeight * 0.2);
       
-      // Initialize animation state if not set
-      if (!element.dataset.animated) {
-        element.dataset.animated = 'false';
+      let targetOpacity = 1;
+      let targetY = 0;
+      let targetScale = 1;
+      
+      if (elementCenter < topFadeZone) {
+        const fadeProgress = Math.max(0, Math.min(1, (topFadeZone - elementCenter) / (viewportHeight * 0.3)));
+        targetOpacity = 1 - (fadeProgress * 0.8);
+        targetY = -fadeProgress * 30;
+        targetScale = 1 - (fadeProgress * 0.05);
+      } else if (elementCenter > bottomFadeZone) {
+        const fadeProgress = Math.max(0, Math.min(1, (elementCenter - bottomFadeZone) / (viewportHeight * 0.3)));
+        targetOpacity = 1 - (fadeProgress * 0.9);
+        targetY = fadeProgress * 40;
+        targetScale = 1 - (fadeProgress * 0.08);
       }
       
-      // Calculate parallax movement based on scroll position
-      const scrollProgress = (window.scrollY - elementTop) / window.innerHeight;
-      const parallaxOffset = scrollProgress * 50; // Move words up/down by 50px
-      
-      // Apply parallax movement to words
-      gsap.set(element, {
-        y: parallaxOffset,
-        force3D: true
+      gsap.to(element, {
+        opacity: targetOpacity,
+        y: targetY,
+        scale: targetScale,
+        duration: 0.3,
+        ease: "power2.out",
+        overwrite: true
       });
-      
-      // Pop up when element enters viewport and is near center (only first time)
-      if (isInView && isNearCenter && element.dataset.animated === 'false') {
-        element.dataset.animated = 'true';
-        gsap.fromTo(element, 
-          { 
-            opacity: 0, 
-            y: parallaxOffset + 30,
-            scale: 0.9,
-            rotationX: -5
-          },
-          {
-            opacity: 1,
-            y: parallaxOffset,
-            scale: 1,
-            rotationX: 0,
-            duration: 0.8, // More controlled duration
-            ease: "power2.out", // More controlled easing, less bounce
-            delay: Math.random() * 0.1 // Shorter, more controlled stagger
-          }
-        );
-      }
-      // Fade out when element goes out of view
-      else if (!isInView && element.style.opacity !== '0') {
-        gsap.to(element, {
-          opacity: 0,
-          y: parallaxOffset + (elementTop < viewportCenter ? -30 : 30),
-          scale: 0.95,
-          duration: 0.4,
-          ease: "power1.in"
-        });
-      }
-      // Fade back in if element comes back into view (after being animated)
-      else if (isInView && isNearCenter && element.dataset.animated === 'true' && element.style.opacity === '0') {
-        gsap.to(element, {
-          opacity: 1,
-          y: parallaxOffset,
-          scale: 1,
-          duration: 0.6,
-          ease: "power1.out"
-        });
-      }
     });
   }
 
-  // Add wheel event listener
-  document.addEventListener('wheel', handleWheel, { passive: false });
+  // Add scroll event listener for fade-in/fade-out animations
+  window.addEventListener('scroll', updateWordVisibility, { passive: true });
+  window.addEventListener('DOMContentLoaded', updateWordVisibility);
   
-  // Initialize scrolling
-  initializeScrolling();
-  
-  // Update current section on scroll with throttling for performance
-  let ticking = false;
-  function updateOnScroll() {
-    if (!ticking) {
-      requestAnimationFrame(() => {
-        updateCurrentSection();
-        updateWordVisibility(); // Update individual word visibility
-        ticking = false;
-      });
-      ticking = true;
-    }
-  }
-  
-  window.addEventListener('scroll', updateOnScroll);
-  
-  // Initialize current section and fade in first section
-  updateCurrentSection();
-  setTimeout(() => {
-    updateWordVisibility(); // Initial word visibility check
-  }, 500);
   
   // Initialize element animations
   initializeElementAnimations();
@@ -532,6 +490,64 @@ document.addEventListener("DOMContentLoaded", () => {
       document.body.style.overflow = '';
     }
   });
+
+  // Per-letter repel/magnetic animation for hero name
+  const heroSpacer = document.querySelector('.hero-spacer');
+  if (heroSpacer) {
+    const letters = heroSpacer.querySelectorAll('.hero-name span');
+    heroSpacer.addEventListener('mousemove', (e) => {
+      const rect = heroSpacer.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+      letters.forEach(letter => {
+        const letterRect = letter.getBoundingClientRect();
+        const letterX = letterRect.left + letterRect.width / 2 - rect.left;
+        const letterY = letterRect.top + letterRect.height / 2 - rect.top;
+        const dx = mouseX - letterX;
+        const dy = mouseY - letterY;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        const maxDist = 180; // px
+        if (dist < maxDist) {
+          const repel = (1 - dist / maxDist) * 60; // max 60px movement for more effect
+          const angle = Math.atan2(dy, dx);
+          const tx = -Math.cos(angle) * repel;
+          const ty = -Math.sin(angle) * repel;
+          gsap.to(letter, {
+            x: tx,
+            y: ty,
+            scale: 1.18 - (dist / maxDist) * 0.18,
+            rotate: (1 - dist / maxDist) * 8 * (Math.random() > 0.5 ? 1 : -1),
+            duration: 0.32,
+            ease: 'expo.out',
+            overwrite: true
+          });
+        } else {
+          gsap.to(letter, {
+            x: 0,
+            y: 0,
+            scale: 1,
+            rotate: 0,
+            duration: 0.5,
+            ease: 'expo.out',
+            overwrite: true
+          });
+        }
+      });
+    });
+    heroSpacer.addEventListener('mouseleave', () => {
+      letters.forEach(letter => {
+        gsap.to(letter, {
+          x: 0,
+          y: 0,
+          scale: 1,
+          rotate: 0,
+          duration: 0.7,
+          ease: 'elastic.out(1, 0.4)',
+          overwrite: true
+        });
+      });
+    });
+  }
 });
 
 // GSAP ANIMATIONS
@@ -598,70 +614,7 @@ function initializeElementAnimations() {
   });
 }
 
-function handleElementAnimations() {
-  const viewportTop = window.scrollY;
-  const viewportBottom = window.scrollY + window.innerHeight;
-  const viewportCenter = window.scrollY + window.innerHeight / 2;
-  
-  const allTextElements = document.querySelectorAll('h1, h2, h3, p, .journey-btn, .typed-words, .tech');
-  
-  allTextElements.forEach(element => {
-    const rect = element.getBoundingClientRect();
-    const elementTop = rect.top + window.scrollY;
-    const elementBottom = elementTop + rect.height;
-    const elementCenter = elementTop + rect.height / 2;
-    
-    const isInView = elementBottom > viewportTop + 100 && elementTop < viewportBottom - 100;
-    const isNearCenter = Math.abs(elementCenter - viewportCenter) < window.innerHeight / 2;
-    
-    if (!element.dataset.animated) {
-      element.dataset.animated = 'false';
-    }
-    
-    // Remove parallax movement to prevent stuttering
-    gsap.set(element, {
-      y: 0,
-      force3D: true
-    });
-    
-    if (isInView && isNearCenter && element.dataset.animated === 'false') {
-      element.dataset.animated = 'true';
-      gsap.fromTo(element, 
-        { 
-          opacity: 0, 
-          y: 15,
-          scale: 0.98,
-        },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.4,
-          ease: "power2.out",
-          delay: 0
-        }
-      );
-    }
-    else if (!isInView && element.style.opacity !== '0') {
-      gsap.to(element, {
-        opacity: 0,
-        y: 10,
-        scale: 0.99,
-        duration: 0.2,
-        ease: "power1.in"
-      });
-    }
-    else if (isInView && isNearCenter && element.dataset.animated === 'true' && element.style.opacity === '0') {
-      gsap.to(element, {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 0.3,
-        ease: "power1.out"
-      });
-    }
-  });
-}
+// Removed duplicate animation system - using only updateWordVisibility now
 
 function isElementInViewport(element) {
   const rect = element.getBoundingClientRect();
@@ -696,62 +649,9 @@ function debounce(func, wait) {
   };
 }
 
-const debouncedAnimationHandler = debounce(handleElementAnimations, 16); // ~60fps
+// Removed debounced handler - using simpler system
 
-function initializeScrolling() {
-  window.addEventListener('wheel', handleWheel, { passive: false });
-}
-
-function scrollToSection(index) {
-  const sections = document.querySelectorAll('.panel');
-  if (index >= 0 && index < sections.length) {
-    const targetSection = sections[index];
-    const targetPosition = targetSection.offsetTop;
-    
-    gsap.to(window, {
-      duration: 0.6,
-      scrollTo: { y: targetPosition, autoKill: false },
-      ease: "power1.out",
-      onComplete: () => {
-        window.currentSectionIndex = index;
-      }
-    });
-  }
-}
-
-function handleWheel(e) {
-  const currentTime = Date.now();
-  const sections = document.querySelectorAll('.panel');
-  
-  if (!window.scrollAccumulator) window.scrollAccumulator = 0;
-  if (!window.lastScrollTime) window.lastScrollTime = 0;
-  if (!window.currentSectionIndex) window.currentSectionIndex = 0;
-  if (!window.isScrolling) window.isScrolling = false;
-  
-  window.scrollAccumulator += Math.abs(e.deltaY);
-  
-  if (window.scrollAccumulator >= 10 && !window.isScrolling && (currentTime - window.lastScrollTime) > 150) {
-    e.preventDefault();
-    window.isScrolling = true;
-    window.lastScrollTime = currentTime;
-    
-    if (e.deltaY > 0) {
-      scrollToSection(window.currentSectionIndex + 1);
-    } else {
-      scrollToSection(window.currentSectionIndex - 1);
-    }
-    
-    window.scrollAccumulator = 0;
-    
-    setTimeout(() => {
-      window.isScrolling = false;
-    }, 800);
-  }
-  
-  setTimeout(() => {
-    window.scrollAccumulator = 0;
-  }, 100);
-}
+// Removed duplicate scroll handlers - using main handleWheel function above
 
 // Remove all custom scroll logic and handlers
 // Only keep the smooth floating/fading animation for hero and about content
@@ -770,7 +670,7 @@ function animateSectionFloat() {
     gsap.to([heroContent, heroStats], {
       y: -progress * 80,
       opacity: 1 - progress * 1.1,
-      duration: 1.5,
+      duration: 0.4, // FADE OUT FASTER
       ease: 'power1.inOut',
       overwrite: 'auto',
       stagger: 0
@@ -813,5 +713,171 @@ function animateSectionFloat() {
 
 // Add scroll event listeners
 window.addEventListener('scroll', animateSectionFloat);
-window.addEventListener('scroll', debouncedAnimationHandler);
 window.addEventListener('DOMContentLoaded', animateSectionFloat);
+
+// STICKY HERO FADE OUT ON SCROLL - Background stays fixed, content slides up
+window.addEventListener('scroll', () => {
+  const hero = document.getElementById('hero');
+  const heroSpacer = document.querySelector('.hero-spacer');
+  const aboutSection = document.getElementById('about');
+  if (!hero || !heroSpacer || !aboutSection) return;
+  
+  const fadeStart = 0;
+  const fadeEnd = window.innerHeight * 0.4; // MUCH FASTER FADE (was 1.5)
+  const scrollY = window.scrollY;
+  let opacity = 1;
+  
+  if (scrollY > fadeStart) {
+    opacity = 1 - Math.min(1, (scrollY - fadeStart) / (fadeEnd - fadeStart));
+  }
+  
+  // Fade the fixed background
+  gsap.set(hero, {
+    opacity: opacity,
+    overwrite: true
+  });
+  
+  // Fade the scrolling names as they move up
+  gsap.set(heroSpacer, {
+    opacity: opacity,
+    overwrite: true
+  });
+  
+  // Animate about section content sliding up
+  const slideStart = window.innerHeight * 0.5;
+  if (scrollY > slideStart) {
+    const slideProgress = Math.min(1, (scrollY - slideStart) / (window.innerHeight * 0.5));
+    gsap.set(aboutSection, {
+      y: 0,
+      opacity: 1,
+      overwrite: true
+    });
+  } else {
+    gsap.set(aboutSection, {
+      y: 100,
+      opacity: 0.8,
+      overwrite: true
+    });
+  }
+});
+
+// --- Enhanced Human Typing Animation for Bio ---
+const humanTypingSequence = [
+  { text: "Hi! I'm ", speed: 75 },
+  { text: "Thomas", speed: 110, bold: true, color: "#000", effect: "glow", boldDelay: 500 },
+  { text: ", an undergraduate mathematics and computer science major at ", speed: 65 },
+  { text: "UPenn", speed: 80, emphasis: true },
+  { pause: 300 },
+  { text: ".", speed: 80 },
+  { text: " I love turning strategic thinking", speed: 65 },
+  { pause: 1000, cursorBlink: "thinking" },
+  { backspace: 26, speed: 40 }, // "turning strategic thinking"
+  { text: "applying game theory and mathematical reasoning into software solutions.", speed: 60 }
+];
+
+class HumanTypeWriter {
+  constructor(element, cursor) {
+    this.element = element;
+    this.cursor = cursor;
+    this.text = '';
+    this._thomasStart = null;
+    this._thomasEnd = null;
+    this._thomasBolded = false;
+  }
+
+  async type(sequence) {
+    for (let step of sequence) {
+      if (step.text && step.bold && step.text === "Thomas" && step.boldDelay) {
+        // Type 'Thomas' normally, then bold after delay
+        this._thomasStart = this.text.length;
+        await this.addText(step.text, step.speed, {});
+        this._thomasEnd = this.text.length;
+        await this.wait(step.boldDelay);
+        this.boldThomas(step.color);
+      } else if (step.text) {
+        await this.addText(step.text, step.speed, step);
+      } else if (step.backspace) {
+        await this.deleteText(step.backspace, step.speed);
+      } else if (step.pause) {
+        if (step.cursorBlink === "thinking") {
+          this.cursor.classList.add('thinking');
+        }
+        await this.wait(step.pause);
+        this.cursor.classList.remove('thinking');
+      }
+    }
+  }
+
+  boldThomas(color) {
+    if (this._thomasStart !== null && this._thomasEnd !== null && !this._thomasBolded) {
+      this.text =
+        this.text.slice(0, this._thomasStart) +
+        `<span class=\"typing-bold\" style=\"color:${color};\">Thomas</span>` +
+        this.text.slice(this._thomasEnd);
+      this.element.innerHTML = this.text;
+      this._thomasBolded = true;
+    }
+  }
+
+  async addText(text, speed, options = {}) {
+    for (let char of text) {
+      if (options.emphasis) {
+        if (!this.text.endsWith('</span>')) {
+          this.text += `<span class=\"typing-emphasis\">`;
+        }
+        this.text += char;
+        if (this.text.endsWith('UPenn')) {
+          this.text += `</span>`;
+        }
+      } else {
+        this.text += char;
+      }
+      this.element.innerHTML = this.text;
+      const humanVariation = speed + (Math.random() * 16 - 8);
+      await this.wait(Math.max(humanVariation, 20));
+    }
+  }
+
+  async deleteText(count, speed = 40) {
+    for (let i = 0; i < count; i++) {
+      // Handle HTML tags when backspacing
+      if (this.text.endsWith('>')) {
+        // Remove entire HTML tag
+        const lastTag = this.text.lastIndexOf('<');
+        this.text = this.text.slice(0, lastTag);
+      } else {
+        this.text = this.text.slice(0, -1);
+      }
+      this.element.innerHTML = this.text;
+      await this.wait(speed);
+    }
+  }
+
+  wait(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+}
+
+const bioTextEl = document.getElementById('bio-text');
+const bioCursorEl = document.getElementById('bio-cursor');
+
+// Hide role cursor and clear role text initially
+if (typedEl) {
+  typedEl.classList.remove('cursor-visible');
+  typedEl.classList.remove('typing');
+  typedEl.textContent = '';
+}
+// Show bio cursor
+if (bioCursorEl) bioCursorEl.style.opacity = 1;
+
+// Start human typing animation on DOMContentLoaded
+window.addEventListener('DOMContentLoaded', async () => {
+  const typewriter = new HumanTypeWriter(bioTextEl, bioCursorEl);
+  await typewriter.type(humanTypingSequence);
+  // Hide bio cursor, show role cursor, start role typing after 1s delay
+  if (bioCursorEl) bioCursorEl.style.opacity = 0;
+  setTimeout(() => {
+    if (typedEl) typedEl.classList.add('cursor-visible');
+    typeRole();
+  }, 1000);
+});

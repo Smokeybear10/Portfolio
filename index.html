@@ -20,6 +20,7 @@
   <script defer src="script.js"></script>
 </head>
 <body>
+  <div class="minimal-grid-line"></div>
 
   <!-- Cursor flashlight -->
   <div class="cursor-light"></div>
@@ -50,34 +51,28 @@
     </nav>
   </header>
 
-  <!-- HERO -->
+  <!-- HERO - Fixed Background -->
   <section id="hero" class="panel hero">
     <div id="tsparticles"></div>
-    <div class="hero-content">
-      <div class="hero-left">
-        <div class="hero-title-stack">
-          <span class="hero-title-blue">SOFTWARE</span>
-          <span class="hero-title-white">DEVELOPER</span>
-          <p class="hero-description-alt">Hi! I'm <strong>Thomas</strong>, a computer science & mathematics student at UPenn. I'm interested in many things, but particularly algorithmic reasoning and how it can be applied to real-world conflict & decision-making.</p>
-        </div>
-        <h2 class="typed-words"></h2>
-      </div>
+    <div class="hero-typing-card">
+      <h2 class="typed-words"></h2>
     </div>
-    <div class="hero-stats-bottom hero-stats-left">
-      <div class="stat-item">
-        <span class="stat-number">2+</span>
-        <span class="stat-label">Years Experience</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-number">4+</span>
-        <span class="stat-label">Projects Completed</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-number">5K+</span>
-        <span class="stat-label">Hours Worked</span>
-      </div>
+    <div class="hero-intro-blurb">
+      <span id="bio-text"></span><span id="bio-cursor">|</span>
     </div>
   </section>
+
+  <!-- HERO SPACER - Creates scroll space with scrolling names -->
+  <div class="hero-spacer">
+    <div class="hero-name-stack">
+      <span class="hero-name hero-name-top"><span>T</span><span>H</span><span>O</span><span>M</span><span style="opacity:0">A</span><span>S</span></span>
+      <span class="hero-name hero-name-bottom"><span style="opacity:0">O</span><span>U</span></span>
+    </div>
+    <div class="hero-name-front-stack">
+      <span class="hero-name hero-name-top"><span style="opacity:0">T</span><span style="opacity:0">H</span><span style="opacity:0">O</span><span style="opacity:0">M</span><span class="hero-name-front">A</span><span style="opacity:0">S</span></span>
+      <span class="hero-name hero-name-bottom"><span class="hero-name-front">O</span><span style="opacity:0">U</span></span>
+    </div>
+  </div>
 
   <!-- ABOUT -->
   <section id="about" class="panel">
@@ -91,9 +86,11 @@
       <div class="about-intro-section">
           <div class="about-content">
             <div class="about-left">
-              <h2>Hi, I'm Thomas.</h2>
-              <div class="about-photo">
-                <div class="photo-placeholder" style="width:180px;height:180px;border-radius:50%;background:linear-gradient(135deg, #1e90ff, #00c6fb);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(0,0,0,0.18);"><span style="color:white;font-size:3rem;font-weight:700;">TO</span></div>
+              <div class="greeting-photo-container">
+                <h2>Hi, I'm Thomas.</h2>
+                <div class="about-photo">
+                  <div class="photo-placeholder" style="width:180px;height:180px;border-radius:50%;background:linear-gradient(135deg, #1e90ff, #00c6fb);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(0,0,0,0.18);"><span style="color:white;font-size:3rem;font-weight:700;">TO</span></div>
+                </div>
               </div>
             </div>
             <div class="about-right">
@@ -153,23 +150,16 @@
         <h2 class="stack-heading">My Stack</h2>
         <div class="stack-grid">
           <div class="tech">Python</div>
-          <div class="tech">JavaScript (ES6+)</div>
-          <div class="tech">TypeScript</div>
-          <div class="tech">React</div>
-          <div class="tech">Node.js</div>
-          <div class="tech">Express</div>
-          <div class="tech">Next.js</div>
-          <div class="tech">PostgreSQL</div>
-          <div class="tech">MongoDB</div>
-          <div class="tech">Docker</div>
-          <div class="tech">AWS</div>
+          <div class="tech">Java</div>
+          <div class="tech">OCaml</div>
+          <div class="tech">R</div>
+          <div class="tech">HTML/CSS</div>
           <div class="tech">PyTorch</div>
-          <div class="tech">TensorFlow</div>
+          <div class="tech">SQL</div>
+          <div class="tech">Scikit-learn</div>
           <div class="tech">Pandas</div>
           <div class="tech">NumPy</div>
           <div class="tech">Matplotlib</div>
-          <div class="tech">Git</div>
-          <div class="tech">Linux</div>
         </div>
       </div>
     </div>
@@ -182,7 +172,8 @@
 
 </body>
   <script>
-    VANTA.NET({
+    // Initialize VANTA.NET with enhanced mouse interaction
+    const vantaEffect = VANTA.NET({
       el: "#hero",
       mouseControls: true,
       touchControls: true,
@@ -191,10 +182,65 @@
       minWidth: 200.00,
       scale: 1.0,
       scaleMobile: 1.0,
-      color: 0x61dafb,
-      backgroundColor: 0x0d0d0d,
-      points: 10.00,
-      maxDistance: 20.00
+      color: 0x1e90ff, // blue accent
+      backgroundColor: 0xf5f5f5, // white
+      points: 15.00, // Increased for more dynamic network
+      maxDistance: 25.00, // Increased connection range
+      spacing: 18.00, // Node spacing
+      showDots: true
     });
+
+    // Enhanced interactive network behavior
+    let mouseX = 0, mouseY = 0;
+    let temporaryConnections = [];
+    
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      
+      // Update VANTA mouse position for enhanced interaction
+      if (vantaEffect && vantaEffect.uniforms) {
+        // Increase mouse influence radius
+        vantaEffect.setOptions({
+          mouseControls: true,
+          points: Math.min(20, 15 + Math.floor(Math.abs(e.movementX + e.movementY) / 10))
+        });
+      }
+      
+      // Create supernode effect around cursor
+      const heroRect = document.getElementById('hero').getBoundingClientRect();
+      const relativeX = (e.clientX - heroRect.left) / heroRect.width;
+      const relativeY = (e.clientY - heroRect.top) / heroRect.height;
+      
+      // Influence network density based on cursor position
+      if (relativeX >= 0 && relativeX <= 1 && relativeY >= 0 && relativeY <= 1) {
+        // Cursor is over hero section - enhance network activity
+        vantaEffect.setOptions({
+          maxDistance: 30 + Math.sin(Date.now() * 0.001) * 5, // Pulsing connections
+          points: 18 + Math.floor(Math.abs(e.movementX + e.movementY) / 15)
+        });
+      }
+    });
+
+    // Reset network on mouse leave
+    document.getElementById('hero').addEventListener('mouseleave', () => {
+      vantaEffect.setOptions({
+        points: 15,
+        maxDistance: 25
+      });
+    });
+
+    // Pulse effect on hero hover
+    document.getElementById('hero').addEventListener('mouseenter', () => {
+      vantaEffect.setOptions({
+        points: 20,
+        maxDistance: 35
+      });
+    });
+
+    // Start role typing animation immediately
+    setTimeout(() => {
+      typeRole();
+    }, 2000);
   </script>
 </html>
