@@ -5,7 +5,7 @@
   --accent-primary: #1e90ff;
   --font-family: 'Fira Mono', 'Consolas', monospace;
   --heading-font: 'Fira Mono', 'Anton', monospace;
-
+  
 }
 
 /* RESET */
@@ -21,7 +21,6 @@ body {
   color: var(--text-color) !important;
   font-family: var(--font-family);
   line-height: 1.6;
-  scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -354,33 +353,36 @@ button:hover, .btn:hover {
 
 .hero-spacer .hero-name-stack,
 .hero-spacer .hero-name-front-stack {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
   z-index: 2;
   pointer-events: none;
+  will-change: opacity;
 }
 
 .hero-name-stack {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: -1;
+  z-index: 1;
   pointer-events: none;
+  will-change: opacity;
 }
 
 .hero-name-front-stack {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: -1;
+  z-index: 1;
   pointer-events: none;
+  will-change: opacity;
 }
 
 .hero-name {
@@ -444,7 +446,7 @@ button:hover, .btn:hover {
   align-items: center;
   justify-content: center;
   padding: min(3.5rem, 4vh) min(2.5rem, 3vw);
-  transition: transform 0.18s cubic-bezier(.4,2,.6,1), box-shadow 0.18s;
+  will-change: transform, scale, border-radius, z-index;
 }
 
 
@@ -1604,6 +1606,143 @@ footer {
   top: 0;
 }
 
+/* EDUCATION TIMELINE STYLES */
+.timeline-container {
+  position: relative;
+  max-width: 800px;
+  margin: 1.2rem auto 3rem auto;
+  padding: 2rem 0;
+}
+
+.timeline-track {
+  position: absolute;
+  left: 11px;
+  top: 42px; /* Start below the first dot (dot is 12px + 2*3px border = 18px, plus spacing) */
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--accent-primary) 80%, transparent 100%);
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 4rem;
+  padding-left: 50px;
+}
+
+.timeline-item:last-child {
+  margin-bottom: 0;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: 6px;
+  top: 9px;
+  width: 12px;
+  height: 12px;
+  background: var(--accent-primary);
+  border: 3px solid white;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px var(--accent-primary);
+}
+
+.timeline-year-badge {
+  display: inline-block;
+  background: var(--accent-primary);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.timeline-content h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+  font-family: var(--heading-font);
+}
+
+.timeline-school {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--accent-primary);
+  margin-bottom: 1rem;
+}
+
+.timeline-details {
+  margin-top: 1rem;
+}
+
+.course-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+
+.course-pill {
+  background: rgba(30, 144, 255, 0.1);
+  color: var(--text-color);
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1px solid rgba(30, 144, 255, 0.2);
+}
+
+.achievement-highlights {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 0.75rem;
+}
+
+.achievement-item {
+  text-align: left;
+}
+
+.achievement-label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.achievement-value {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--accent-primary);
+}
+
+/* Responsive Timeline */
+@media (max-width: 768px) {
+  .timeline-container {
+    margin: 2rem 1rem;
+  }
+  
+  .timeline-item {
+    padding-left: 40px;
+  }
+  
+  .timeline-content h3 {
+    font-size: 1.2rem;
+  }
+  
+  .course-pill {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+  }
+  
+  .achievement-highlights {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}
+
 @media (max-width: 768px) {
   .section-title h2 {
     font-size: 2rem;
@@ -1781,5 +1920,46 @@ footer {
     overflow: hidden;
     text-overflow: ellipsis;
   }
+}
+
+.education-sticky-title {
+  /* Default: centered, not sticky */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  z-index: 10;
+  margin-bottom: -2rem;
+}
+
+#education-bg-animated {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+#experience .container {
+  position: relative;
+  z-index: 2;
+}
+
+#education-bg-vanta {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background-color: #f5f5f5;
+}
+#experience .container {
+  position: relative;
+  z-index: 2;
 }
 

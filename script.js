@@ -1,3 +1,6 @@
+// GSAP ScrollTrigger setup
+gsap.registerPlugin(ScrollTrigger);
+
 // HERO TEXT FADING & ROTATING ROLES
 const roles = [
   "Frontend Dev",
@@ -59,171 +62,8 @@ function eraseRole() {
 }
 
 
-// POP ANIMATION FOR HERO & ABOUT SECTIONS
-function getSectionContent(sectionId) {
-  const section = document.getElementById(sectionId);
-  if (!section) return [];
-  // Select all main content elements in the section
-  return Array.from(section.querySelectorAll('.hero-title-blue, .hero-title-white, .hero-description-alt, .typed-words, .hero-stats-bottom.hero-stats-left, .about-quote-full p, .about-welcome, .about-photo, .about-right p:not(.about-welcome), .journey-btn, .education-left h2, .education-right'));
-}
-
-const heroContentEls = getSectionContent('hero');
-const aboutContentEls = getSectionContent('about');
-
-function popInSection(elements, from = 'top') {
-  const yVal = from === 'top' ? -60 : 60;
-  gsap.fromTo(elements, {
-    opacity: 0,
-    y: yVal
-  }, {
-    opacity: 1,
-    y: 0,
-    duration: 0.7,
-    ease: 'back.out(1.7)',
-    stagger: 0.08
-  });
-}
-
-function popOutSection(elements, to = 'top') {
-  const yVal = to === 'top' ? -60 : 60;
-  gsap.to(elements, {
-    opacity: 0,
-    y: yVal,
-    duration: 0.5,
-    ease: 'back.in(1.2)'
-  });
-}
-
-// Helper to check if section is halfway out of view
-function isHalfwayOutOfView(section) {
-  const rect = section.getBoundingClientRect();
-  const windowHeight = window.innerHeight;
-  const halfway = rect.height / 2;
-  return rect.top > windowHeight - halfway || rect.bottom < halfway;
-}
-
-// Animation state flags
-let heroInView = false;
-let aboutInView = false;
-let educationInView = false;
-
-function handleSectionPopAnimations() {
-  // HERO
-  const heroSection = document.getElementById('hero');
-  const heroRect = heroSection.getBoundingClientRect();
-  const windowHeight = window.innerHeight;
-  const heroHalfwayOut = isHalfwayOutOfView(heroSection);
-  if (!heroHalfwayOut && !heroInView) {
-    // Section is in view, pop in from direction
-    const from = heroRect.top > 0 ? 'top' : 'bottom';
-    popInSection(heroContentEls, from);
-    heroInView = true;
-  } else if (heroHalfwayOut && heroInView) {
-    // Section is halfway out, pop out in direction
-    const to = heroRect.top < 0 ? 'top' : 'bottom';
-    popOutSection(heroContentEls, to);
-    heroInView = false;
-  }
-
-  // ABOUT
-  const aboutSection = document.getElementById('about');
-  const aboutRect = aboutSection.getBoundingClientRect();
-  const aboutHalfwayOut = isHalfwayOutOfView(aboutSection);
-  if (!aboutHalfwayOut && !aboutInView) {
-    const from = aboutRect.top > 0 ? 'top' : 'bottom';
-    popInSection(aboutContentEls, from);
-    aboutInView = true;
-  } else if (aboutHalfwayOut && aboutInView) {
-    const to = aboutRect.top < 0 ? 'top' : 'bottom';
-    popOutSection(aboutContentEls, to);
-    aboutInView = false;
-  }
-
-  // EDUCATION
-  const educationSection = document.querySelector('.education-section');
-  if (educationSection) {
-    const educationRect = educationSection.getBoundingClientRect();
-    const educationHalfwayOut = isHalfwayOutOfView(educationSection);
-    if (!educationHalfwayOut && !educationInView) {
-      const from = educationRect.top > 0 ? 'top' : 'bottom';
-      popInEducation(from);
-      educationInView = true;
-    } else if (educationHalfwayOut && educationInView) {
-      const to = educationRect.top < 0 ? 'top' : 'bottom';
-      popOutEducation(to);
-      educationInView = false;
-    }
-  }
-}
-
-// Education pop-in animation functions
-function popInEducation(from = 'top') {
-  const educationElements = document.querySelectorAll('.education-left h2, .education-right');
-  const yVal = from === 'top' ? -60 : 60;
-  gsap.fromTo(educationElements, {
-    opacity: 0,
-    y: yVal
-  }, {
-    opacity: 1,
-    y: 0,
-    duration: 0.7,
-    ease: 'back.out(1.7)',
-    stagger: 0.08
-  });
-}
-
-function popOutEducation(to = 'top') {
-  const educationElements = document.querySelectorAll('.education-left h2, .education-right');
-  const yVal = to === 'top' ? -60 : 60;
-  gsap.to(educationElements, {
-    opacity: 0,
-    y: yVal,
-    duration: 0.5,
-    ease: 'back.in(1.2)'
-  });
-}
-
-// On page load, pop in hero and about from top
-window.addEventListener('DOMContentLoaded', () => {
-  popInSection(heroContentEls, 'top');
-  popInSection(aboutContentEls, 'top');
-  heroInView = true;
-  aboutInView = true;
-});
-window.addEventListener('scroll', handleSectionPopAnimations);
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Staggered fade-in animation from top to bottom
-  const tl = gsap.timeline();
-  
-  // Animate hero intro first
-  tl.to(".hero-intro", { 
-    opacity: 1, 
-    y: 0, 
-    duration: 0.8, 
-    ease: "power2.out" 
-  })
-  // Then animate hero title
-  .to(".hero-title", { 
-    opacity: 1, 
-    y: 0, 
-    duration: 0.8, 
-    ease: "power2.out" 
-  }, "-=0.3")
-  // Then animate the About Me button
-  .to(".hero-btn", { 
-    opacity: 1, 
-    y: 0, 
-    duration: 0.6, 
-    ease: "power2.out" 
-  }, "-=0.1")
-  // Finally animate the stats
-  .to(".hero-stats-bottom", { 
-    opacity: 1, 
-    y: 0, 
-    duration: 0.8, 
-    ease: "power2.out" 
-  }, "-=0.2");
 
   // Cursor flashlight effect
   const cursorLight = document.querySelector(".cursor-light");
@@ -284,10 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
   function scrollToAbout() {
     const aboutSection = document.querySelector("#about");
-    aboutSection.scrollIntoView({ 
-      behavior: 'smooth',
-      block: 'start'
-    });
+    aboutSection.scrollIntoView({ behavior: 'smooth' });
   }
   
   if (aboutBtn) aboutBtn.addEventListener("click", scrollToAbout);
@@ -449,7 +286,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Add scroll event listener for fade-in/fade-out animations
-  window.addEventListener('scroll', updateWordVisibility, { passive: true });
+  window.addEventListener('scroll', updateWordVisibility);
   window.addEventListener('DOMContentLoaded', updateWordVisibility);
   
   
@@ -1011,4 +848,29 @@ window.addEventListener('DOMContentLoaded', async () => {
     // Don't automatically start role typing - wait for user to see the loading animation first
     // Role typing will start when loading animation is deleted after user scrolls
   }
-});d
+});
+
+// Animated background for Education section using Vanta.js GLOBE
+window.addEventListener('DOMContentLoaded', () => {
+  if (window.VANTA && window.VANTA.GLOBE && document.getElementById('education-bg-animated')) {
+    window.VANTA.GLOBE({
+      el: '#education-bg-animated',
+      mouseControls: false,
+      touchControls: false,
+      gyroControls: false,
+      minHeight: 200.00,
+      minWidth: 200.00,
+      scale: 1.0,
+      scaleMobile: 1.0,
+      color: 0x1e90ff, // blue accent
+      color2: 0xffffff, // white
+      backgroundColor: 0xf5f5f5, // white
+      size: 1.2,
+      points: 16.0,
+      maxDistance: 22.0,
+      spacing: 18.0,
+      showDots: true,
+      opacity: 0.18
+    });
+  }
+});

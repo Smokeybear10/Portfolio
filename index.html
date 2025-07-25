@@ -12,8 +12,9 @@
   <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
   <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
   <!-- Three.js and Vanta.js for animated backgrounds -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
   <script src="https://unpkg.com/vanta/dist/vanta.net.min.js"></script>
+  <script src="https://unpkg.com/vanta/dist/vanta.globe.min.js"></script>
   <!-- Styles -->
   <link rel="stylesheet" href="style.css" />
   <!-- Your scripts -->
@@ -74,7 +75,7 @@
   <!-- CENTERED PROGRESS BAR BLOCK -->
   <div id="about-overlay" class="about-overlay visible">
     <div class="about-overlay-center">
-      <div id="thomas-exe-center" class="about-system-center">THOMAS.EXE v2.1.0 - Neural Processing Unit</div>
+      <div id="thomas-exe-center" class="about-system-center">THOMAS.EXE v2.1.0</div>
       <div id="about-scroll-progress" class="about-system-progress">
         <div class="progress-bar-bg">
           <div class="progress-bar-fill"></div>
@@ -87,7 +88,7 @@
   <section id="about" class="panel">
     <div class="container">
       <!-- Initial spacer before Thomas text -->
-      <div style="height: 100vh;"></div>
+      <div style="height: 200vh;"></div>
       
       <!-- Thomas text appears first -->
       <div class="about-hi-sticky">HELLO. I AM THOMAS
@@ -95,7 +96,7 @@
       </div>
       
       <!-- Spacer to delay photo appearance -->
-      <div style="height: 150vh;"></div>
+      <div style="height: 125vh;"></div>
       
       <!-- Photo appears further down in same spacer -->
       <div class="about-hi-photo">
@@ -103,13 +104,13 @@
       </div>
       
       <!-- Spacer to delay subtitle -->
-      <div style="height: 40vh;"></div>
+      <div style="height: 50vh;"></div>
       
       <!-- Subtitle appears after photo -->
       <div class="about-hi-subtitle">A Bit About Me</div>
       
       <!-- Spacer to delay descriptions -->
-      <div style="height: 30vh;"></div>
+      <div style="height: 50vh;"></div>
       
       <!-- First description paragraph block -->
       <div class="about-description-paragraph" id="para-1">
@@ -136,164 +137,116 @@
       </div>
       
       <!-- Extra spacer at end -->
-      <div style="height: 150vh;"></div>
+      <div style="height: 200vh;"></div>
     </div>
   </section>
 
-  <!-- EXPERIENCE SECTION -->
+  <!-- EDUCATION SECTION -->
   <section id="experience" class="panel">
+    <div id="education-bg-vanta" style="background: #f5f5f5;"></div>
     <div class="container">
       <!-- Section title -->
-      <div class="section-title">
-        <h2>Experience</h2>
+      <div class="section-title education-sticky-title">
+        <h2>Education</h2>
       </div>
       
-      <!-- Education subsection -->
-      <div class="experience-subsection">
-        <h3 class="subsection-title">Education</h3>
+      <!-- Education Timeline -->
+      <div class="timeline-container">
+        <div class="timeline-track"></div>
         
-        <div class="experience-content">
-          <div class="experience-item">
-            <div class="experience-header">
-              <h3>Bachelor of Arts in Mathematics</h3>
-              <span class="company">University of Pennsylvania</span>
-              <span class="duration">2022 - 2026</span>
-            </div>
-            <div class="experience-description">
-              <p>Pursuing a comprehensive mathematics degree with focus on applied mathematics, statistics, and computational methods. Concentrating in probability theory and statistical analysis with applications to machine learning and quantitative finance.</p>
-              <ul>
-                <li>Relevant Coursework: Linear Algebra, Real Analysis, Probability Theory, Mathematical Statistics, Stochastic Processes, Mathematical Finance</li>
-                <li>GPA: 3.8/4.0 - Dean's List recognition for academic excellence</li>
-                <li>Active member of the Mathematics Society and Quantitative Finance Club</li>
-                <li>Research focus: Statistical modeling and probabilistic machine learning algorithms</li>
-              </ul>
+        <!-- Timeline Item 1 -->
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-year-badge">2026-2028</div>
+            <h3>Master of Science in Computer Science</h3>
+            <div class="timeline-school">University of Pennsylvania</div>
+            <div class="timeline-details">
+              <div class="course-grid">
+                <span class="course-pill">Artificial Intelligence</span>
+                <span class="course-pill">Machine Learning</span>
+                <span class="course-pill">Algorithms & Data Structures</span>
+                <span class="course-pill">Computer Systems</span>
+                <span class="course-pill">Backend Infrastructure</span>
+                <span class="course-pill">Software Engineering</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Professional Experience subsection -->
-      <div class="experience-subsection">
-        <h3 class="subsection-title">Professional Experience</h3>
-        
-        <div class="experience-content">
-          <div class="experience-item">
-            <div class="experience-header">
-              <h3>Quantitative Research Intern</h3>
-              <span class="company">Proprietary Trading Firm</span>
-              <span class="duration">Summer 2024</span>
-            </div>
-            <div class="experience-description">
-              <p>Developed quantitative trading strategies using statistical analysis and machine learning techniques. Applied game theory principles to optimize trading algorithms in high-frequency environments.</p>
-              <ul>
-                <li>Built predictive models using Python, NumPy, and scikit-learn for market data analysis</li>
-                <li>Implemented backtesting frameworks to evaluate strategy performance across multiple asset classes</li>
-                <li>Achieved 15% improvement in risk-adjusted returns through statistical arbitrage strategies</li>
-                <li>Collaborated with senior quants to optimize portfolio allocation using modern portfolio theory</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="experience-item">
-            <div class="experience-header">
-              <h3>Software Engineering Intern</h3>
-              <span class="company">Fintech Startup</span>
-              <span class="duration">Summer 2023</span>
-            </div>
-            <div class="experience-description">
-              <p>Developed scalable backend infrastructure for a cryptocurrency trading platform. Built real-time data processing systems handling millions of transactions daily.</p>
-              <ul>
-                <li>Designed and implemented RESTful APIs using Node.js, Express, and PostgreSQL</li>
-                <li>Built real-time WebSocket connections for live market data streaming</li>
-                <li>Optimized database queries resulting in 40% reduction in response times</li>
-                <li>Implemented automated testing suites achieving 95% code coverage</li>
-                <li>Collaborated in agile development environment using Git, Docker, and AWS services</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="experience-item">
-            <div class="experience-header">
-              <h3>Research Assistant</h3>
-              <span class="company">University of Pennsylvania - Mathematics Department</span>
-              <span class="duration">Fall 2023 - Present</span>
-            </div>
-            <div class="experience-description">
-              <p>Conducting research in applied probability and statistical machine learning under faculty supervision. Focus on developing novel algorithms for financial risk assessment.</p>
-              <ul>
-                <li>Developed Monte Carlo simulation methods for complex derivative pricing models</li>
-                <li>Implemented machine learning algorithms for credit risk assessment using TensorFlow</li>
-                <li>Published findings in undergraduate research symposium</li>
-                <li>Collaborated with graduate students on multi-variate statistical analysis projects</li>
-                <li>Presented research at regional mathematics conferences</li>
-              </ul>
+        <!-- Timeline Item 2 -->
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-year-badge">2022-2026</div>
+            <h3>Bachelor of Arts in Mathematics</h3>
+            <div class="timeline-school">University of Pennsylvania</div>
+            <div class="timeline-details">
+              <div class="course-grid">
+                <span class="course-pill">Game Theory</span>
+                <span class="course-pill">Probability Theory</span>
+                <span class="course-pill">Mathematical Optimization</span>
+                <span class="course-pill">Advanced Calculus</span>
+                <span class="course-pill">Linear Algebra</span>
+                <span class="course-pill">Statistics</span>
+                <span class="course-pill">Mathematical Programming</span>
+                <span class="course-pill">Combinatorics</span>
+                <span class="course-pill">Financial Mathematics</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Additional Experience subsection -->
-      <div class="experience-subsection">
-        <h3 class="subsection-title">Additional Experience</h3>
-        
-        <div class="experience-content">
-          <div class="experience-item">
-            <div class="experience-header">
-              <h3>Professional Poker Player</h3>
-              <span class="company">Online & Live Tournaments</span>
-              <span class="duration">2020 - Present</span>
-            </div>
-            <div class="experience-description">
-              <p>Applied advanced game theory, probability analysis, and statistical modeling to competitive poker. Developed systematic approaches to decision-making under uncertainty.</p>
-              <ul>
-                <li>Achieved consistent profitability over 4+ years with ROI exceeding industry standards</li>
-                <li>Specialized in tournament strategy optimization using Nash equilibrium concepts</li>
-                <li>Built custom analysis tools using Python for hand history review and opponent modeling</li>
-                <li>Developed bankroll management strategies based on risk of ruin calculations</li>
-                <li>Applied machine learning techniques for pattern recognition in opponent behavior</li>
-              </ul>
+        <!-- Timeline Item 3 -->
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-year-badge">2020-2022</div>
+            <h3>Dual Enrollment Program</h3>
+            <div class="timeline-school">University of Connecticut</div>
+            <div class="timeline-details">
+              <div class="course-grid">
+                <span class="course-pill">Modern Western Traditions</span>
+                <span class="course-pill">Calculus I</span>
+                <span class="course-pill">Calculus II</span>
+                <span class="course-pill">Multivariable Calculus</span>
+              </div>
             </div>
           </div>
+        </div>
 
-          <div class="experience-item">
-            <div class="experience-header">
-              <h3>Mathematics & Statistics Tutor</h3>
-              <span class="company">Freelance & University Tutoring Center</span>
-              <span class="duration">2022 - Present</span>
-            </div>
-            <div class="experience-description">
-              <p>Provided personalized instruction in advanced mathematics and statistics to undergraduate and graduate students. Specialized in probability theory, statistical inference, and computational methods.</p>
-              <ul>
-                <li>Tutored 50+ students in calculus, linear algebra, probability theory, and statistical analysis</li>
-                <li>Developed custom learning materials and problem sets tailored to individual learning styles</li>
-                <li>Achieved 98% student satisfaction rate with significant grade improvements</li>
-                <li>Created interactive Python notebooks for statistical computing demonstrations</li>
-                <li>Mentored students in research methodology and mathematical proof techniques</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="experience-item">
-            <div class="experience-header">
-              <h3>Data Analysis Consultant</h3>
-              <span class="company">Local Businesses</span>
-              <span class="duration">2023 - Present</span>
-            </div>
-            <div class="experience-description">
-              <p>Provided data analysis and statistical consulting services to small businesses. Specialized in customer behavior analysis, sales forecasting, and operational optimization.</p>
-              <ul>
-                <li>Analyzed customer data using Python and R to identify trends and optimization opportunities</li>
-                <li>Built predictive models for inventory management and demand forecasting</li>
-                <li>Created automated reporting dashboards using Tableau and Power BI</li>
-                <li>Implemented A/B testing frameworks to optimize marketing campaigns</li>
-                <li>Increased client revenue by average of 25% through data-driven recommendations</li>
-              </ul>
+        <!-- Timeline Item 4 -->
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-year-badge">2018-2022</div>
+            <h3>High School Diploma</h3>
+            <div class="timeline-school">Trumbull High School</div>
+            <div class="timeline-details">
+              <div class="course-grid">
+                <span class="course-pill">Summa Cum Laude (Top 2%)</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- Education Modal -->
+  <div id="education-modal" class="modal-overlay">
+    <div class="modal-card">
+      <button class="modal-close">&times;</button>
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-year-badge"></div>
+          <h3 class="modal-title"></h3>
+          <div class="modal-school"></div>
+        </div>
+        <div class="modal-details"></div>
+      </div>
+    </div>
+  </div>
 
   <!-- FOOTER -->
   <footer>
@@ -302,72 +255,48 @@
 
 </body>
   <script>
-    // Initialize VANTA.NET with enhanced mouse interaction
-    const vantaEffect = VANTA.NET({
+    // Initialize VANTA.NET on hero section
+    VANTA.NET({
       el: "#hero",
       mouseControls: true,
       touchControls: true,
       gyroControls: false,
       minHeight: 200.00,
       minWidth: 200.00,
-      scale: 1.0,
-      scaleMobile: 1.0,
-      color: 0x1e90ff, // blue accent
-      backgroundColor: 0xf5f5f5, // white
-      points: 15.00, // Increased for more dynamic network
-      maxDistance: 25.00, // Increased connection range
-      spacing: 18.00, // Node spacing
-      showDots: true
+      scale: 1.00,
+      scaleMobile: 1.00,
+      color: 0x0,
+      backgroundColor: 0xffffff,
+      points: 20.00,
+      maxDistance: 28.00,
+      spacing: 16.00,
+      showDots: false
     });
-
-    // Enhanced interactive network behavior
-    let mouseX = 0, mouseY = 0;
-    let temporaryConnections = [];
-    
-    document.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM loaded, initializing VANTA.GLOBE');
+      console.log('Education bg element:', document.getElementById('education-bg-vanta'));
+      console.log('VANTA object:', window.VANTA);
       
-      // Update VANTA mouse position for enhanced interaction
-      if (vantaEffect && vantaEffect.uniforms) {
-        // Increase mouse influence radius
-        vantaEffect.setOptions({
+      if (window.VANTA && window.VANTA.GLOBE && document.getElementById('education-bg-vanta')) {
+        VANTA.GLOBE({
+          el: "#education-bg-vanta",
           mouseControls: true,
-          points: Math.min(20, 15 + Math.floor(Math.abs(e.movementX + e.movementY) / 10))
+          touchControls: true,
+          gyroControls: false,
+          minHeight: 200.00,
+          minWidth: 200.00,
+          scale: 1.00,
+          scaleMobile: 1.00,
+          color: 0x0,
+          color2: 0x0,
+          backgroundColor: 0xf5f5f5
         });
-      }
-      
-      // Create supernode effect around cursor
-      const heroRect = document.getElementById('hero').getBoundingClientRect();
-      const relativeX = (e.clientX - heroRect.left) / heroRect.width;
-      const relativeY = (e.clientY - heroRect.top) / heroRect.height;
-      
-      // Influence network density based on cursor position
-      if (relativeX >= 0 && relativeX <= 1 && relativeY >= 0 && relativeY <= 1) {
-        // Cursor is over hero section - enhance network activity
-        vantaEffect.setOptions({
-          maxDistance: 30 + Math.sin(Date.now() * 0.001) * 5, // Pulsing connections
-          points: 18 + Math.floor(Math.abs(e.movementX + e.movementY) / 15)
-        });
+        console.log('VANTA.GLOBE initialized successfully');
+      } else {
+        console.log('Failed to initialize VANTA.GLOBE - missing dependencies');
       }
     });
-
-    // Reset network on mouse leave
-    document.getElementById('hero').addEventListener('mouseleave', () => {
-      vantaEffect.setOptions({
-        points: 15,
-        maxDistance: 25
-      });
-    });
-
-    // Pulse effect on hero hover
-    document.getElementById('hero').addEventListener('mouseenter', () => {
-      vantaEffect.setOptions({
-        points: 20,
-        maxDistance: 35
-      });
-    });
-
-    // Role typing will be started after bio completes via script.js
   </script>
 </html>
