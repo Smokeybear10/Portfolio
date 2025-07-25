@@ -7,29 +7,37 @@ const roles = [
   "Quant Analyst",
   "Poker Nerd"
 ];
-const typingDelay = 150, erasingDelay = 100, newTextDelay = 2000;
+const typingDelay = 120, erasingDelay = 80, newTextDelay = 2500;
 let roleIndex = 0, charIndex = 0;
 const typedEl = document.querySelector(".typed-words");
+let isTyping = false;
 
 function typeRole() {
-  // Show cursor when typing starts
-  if (typedEl) {
+  if (!typedEl) return;
+  
+  // Ensure we're in typing mode
+  if (!isTyping) {
+    isTyping = true;
     typedEl.classList.add('typing');
   }
   
   if (charIndex < roles[roleIndex].length) {
     typedEl.textContent += roles[roleIndex].charAt(charIndex++);
-    setTimeout(typeRole, typingDelay);
+    setTimeout(typeRole, typingDelay + Math.random() * 40 - 20); // Add slight variation
   } else {
-    // Hide cursor when typing stops
+    // Finished typing this word
+    isTyping = false;
     typedEl.classList.remove('typing');
     setTimeout(eraseRole, newTextDelay);
   }
 }
 
 function eraseRole() {
-  // Show cursor during erasing
-  if (typedEl) {
+  if (!typedEl) return;
+  
+  // Ensure we're in erasing mode
+  if (!isTyping) {
+    isTyping = true;
     typedEl.classList.add('typing');
   }
   
@@ -37,43 +45,19 @@ function eraseRole() {
     typedEl.textContent = roles[roleIndex].substring(0, charIndex--);
     setTimeout(eraseRole, erasingDelay);
   } else {
+    // Move to next role
     roleIndex = (roleIndex + 1) % roles.length;
-    // Ensure text is completely cleared before starting new word
     typedEl.textContent = "";
-    // Hide cursor briefly between words
+    
+    // Brief pause with cursor hidden between words
+    isTyping = false;
     typedEl.classList.remove('typing');
-    setTimeout(typeRole, typingDelay);
+    setTimeout(() => {
+      typeRole();
+    }, 300);
   }
 }
 
-// HERO TITLE POP ANIMATION
-const heroTitleWords = [
-  ...document.querySelectorAll('.hero-title-blue, .hero-title-white')
-];
-
-function popInWords(from = 'top') {
-  const yVal = from === 'top' ? -60 : 60;
-  gsap.fromTo(heroTitleWords, {
-    opacity: 0,
-    y: yVal
-  }, {
-    opacity: 1,
-    y: 0,
-    duration: 0.7,
-    ease: 'back.out(1.7)',
-    stagger: 0.08
-  });
-}
-
-function popOutWords(to = 'top') {
-  const yVal = to === 'top' ? -60 : 60;
-  gsap.to(heroTitleWords, {
-    opacity: 0,
-    y: yVal,
-    duration: 0.5,
-    ease: 'back.in(1.2)'
-  });
-}
 
 // POP ANIMATION FOR HERO & ABOUT SECTIONS
 function getSectionContent(sectionId) {
@@ -226,13 +210,6 @@ document.addEventListener("DOMContentLoaded", () => {
     duration: 0.8, 
     ease: "power2.out" 
   }, "-=0.3")
-  // Then animate the typing text
-  .to(".typed-words", { 
-    opacity: 1, 
-    y: 0, 
-    duration: 0.6, 
-    ease: "power2.out" 
-  }, "-=0.2")
   // Then animate the About Me button
   .to(".hero-btn", { 
     opacity: 1, 
@@ -290,17 +267,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const titleGlowSpread = 16 + (titleIntensity * 48);
     heroTitle.style.textShadow = `0 0 ${titleGlowIntensity}px #1e90ff, 0 0 ${titleGlowSpread}px #1e90ff`;
     
-    // Apply glow to hero intro - REMOVED
-    // const introIntensity = Math.max(0, 1 - introDistance / maxDistance);
-    // const introGlowIntensity = 4 + (introIntensity * 16);
-    // const introGlowSpread = 8 + (introIntensity * 32);
-    // heroIntro.style.textShadow = `0 0 ${introGlowIntensity}px #fff, 0 0 ${introGlowSpread}px #fff`;
-    
-    // Apply glow to typed words - REMOVED
-    // const typedIntensity = Math.max(0, 1 - typedDistance / maxDistance);
-    // const typedGlowIntensity = 6 + (typedIntensity * 20);
-    // const typedGlowSpread = 12 + (typedIntensity * 40);
-    // typedWords.style.textShadow = `0 0 ${typedGlowIntensity}px #fff, 0 0 ${typedGlowSpread}px #fff`;
     
     // Apply faint blue glow to button
     const btnIntensity = Math.max(0, 1 - btnDistance / maxDistance);
@@ -418,12 +384,46 @@ document.addEventListener("DOMContentLoaded", () => {
       const elementCenter = elementTop + rect.height / 2;
       
       // Standard fade zones for non-about elements
-      const topFadeZone = viewportTop + (viewportHeight * 0.2);
-      const bottomFadeZone = viewportBottom - (viewportHeight * 0.2);
+      // Special handling for typed-words to make it appear later when scrolling
+      let topFadeZone, bottomFadeZone;
+      if (element.classList.contains('typed-words')) {
+        topFadeZone = viewportTop + (viewportHeight * 0.4); // Increased from 0.2 to 0.4 - appears later
+        bottomFadeZone = viewportBottom - (viewportHeight * 0.4);
+      } else {
+        topFadeZone = viewportTop + (viewportHeight * 0.2);
+        bottomFadeZone = viewportBottom - (viewportHeight * 0.2);
+      }
       
       let targetOpacity = 1;
       let targetY = 0;
       let targetScale = 1;
+      
+      // Handle typed-words loading animation 
+      if (element.classList.contains('typed-words')) {
+        const isVisible = elementCenter >= topFadeZone && elementCenter <= bottomFadeZone;
+        
+        if (isVisible) {
+          // Show the element and start loading animation
+          if (!element.classList.contains('show')) {
+            element.classList.add('show');
+            console.log('Typed-words now visible, starting loading animation');
+            startLoadingAnimation();
+          }
+          
+          // If bio is complete and loading is running, start the deletion sequence
+          if (bioTypingComplete && loadingInterval && !element.classList.contains('role-typing-started')) {
+            element.classList.add('role-typing-started'); // Prevent multiple triggers
+            console.log('Starting role typing sequence');
+            setTimeout(async () => {
+              await deleteLoadingText();
+              roleIndex = 0;
+              charIndex = 0;
+              isTyping = false;
+              typeRole();
+            }, 2000); // 2 second delay to see loading animation
+          }
+        }
+      }
       
       if (elementCenter < topFadeZone) {
         const fadeProgress = Math.max(0, Math.min(1, (topFadeZone - elementCenter) / (viewportHeight * 0.3)));
@@ -553,44 +553,6 @@ document.addEventListener("DOMContentLoaded", () => {
 // GSAP ANIMATIONS
 gsap.registerPlugin(ScrollTrigger);
 
-// nav fade in
-gsap.from(".nav", { y: -50, opacity: 0, duration: .8, ease: "power2.out" });
-
-// panels reveal
-gsap.utils.toArray(".panel").forEach(panel => {
-  gsap.from(panel, {
-    opacity: 0,
-    y: 50,
-    ease: "power2.out",
-    scrollTrigger: {
-      trigger: panel,
-      start: "top 80%",
-    }
-  });
-});
-
-// skill bars
-gsap.utils.toArray(".bar div").forEach(bar => {
-  ScrollTrigger.create({
-    trigger: bar.parentElement,
-    onEnter: () => gsap.to(bar, { width: bar.dataset.level, duration: 1.2, ease: "power2.out" })
-  });
-});
-
-// project cards
-gsap.utils.toArray(".card").forEach((card, i) => {
-  gsap.to(card, {
-    y: 0,
-    opacity: 1,
-    delay: i * 0.2,
-    duration: .8,
-    ease: "power2.out",
-    scrollTrigger: {
-      trigger: card,
-      start: "top 90%",
-    }
-  });
-});
 
 // Element animation system
 function initializeElementAnimations() {
@@ -614,106 +576,8 @@ function initializeElementAnimations() {
   });
 }
 
-// Removed duplicate animation system - using only updateWordVisibility now
 
-function isElementInViewport(element) {
-  const rect = element.getBoundingClientRect();
-  return (
-    rect.top >= 0 &&
-    rect.left >= 0 &&
-    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-  );
-}
 
-function throttledAnimationHandler() {
-  if (!window.animationTicking) {
-    window.animationTicking = true;
-    requestAnimationFrame(() => {
-      handleElementAnimations();
-      window.animationTicking = false;
-    });
-  }
-}
-
-// Debounced scroll handler for better performance
-function debounce(func, wait) {
-  let timeout;
-  return function executedFunction(...args) {
-    const later = () => {
-      clearTimeout(timeout);
-      func(...args);
-    };
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-  };
-}
-
-// Removed debounced handler - using simpler system
-
-// Removed duplicate scroll handlers - using main handleWheel function above
-
-// Remove all custom scroll logic and handlers
-// Only keep the smooth floating/fading animation for hero and about content
-function animateSectionFloat() {
-  const heroSection = document.getElementById('hero');
-  const aboutSection = document.getElementById('about');
-  const heroContent = document.querySelector('.hero-content');
-  const heroStats = document.querySelector('.hero-stats-bottom.hero-stats-left');
-  const aboutContent = document.querySelector('.about-content');
-  const aboutQuote = document.querySelector('.about-quote-full');
-
-  // Animate hero content (unchanged)
-  if (heroSection && heroContent && heroStats) {
-    const heroRect = heroSection.getBoundingClientRect();
-    let progress = Math.min(1, Math.max(0, -heroRect.top / heroRect.height));
-    gsap.to([heroContent, heroStats], {
-      y: -progress * 80,
-      opacity: 1 - progress * 1.1,
-      duration: 0.4, // FADE OUT FASTER
-      ease: 'power1.inOut',
-      overwrite: 'auto',
-      stagger: 0
-    });
-  }
-
-  // Animate about content: pop in from bottom, pop out upwards
-  if (aboutSection && aboutContent && aboutQuote) {
-    const aboutRect = aboutSection.getBoundingClientRect();
-    const windowHeight = window.innerHeight;
-    // Section is in view if any part is visible
-    const inView = aboutRect.bottom > 0 && aboutRect.top < windowHeight;
-    if (inView) {
-      // How much of the section is in view (0 = just entering, 1 = fully in view)
-      let progress = Math.min(1, Math.max(0, 1 - Math.abs(aboutRect.top) / windowHeight));
-      gsap.to([aboutContent, aboutQuote], {
-        y: 60 * (1 - progress),
-        opacity: progress,
-        duration: 1,
-        ease: 'power1.inOut',
-        overwrite: 'auto',
-        stagger: 0
-      });
-    } else if (aboutRect.top <= 0) {
-      // Scrolled past (pop out upwards)
-      gsap.to([aboutContent, aboutQuote], {
-        y: -60,
-        opacity: 0,
-        duration: 1,
-        ease: 'power1.inOut',
-        overwrite: 'auto',
-        stagger: 0
-      });
-    } else {
-      // Not yet in view (below viewport)
-      gsap.set([aboutContent, aboutQuote], { y: 60, opacity: 0 });
-    }
-  }
-}
-
-// Add scroll event listeners
-window.addEventListener('scroll', animateSectionFloat);
-window.addEventListener('DOMContentLoaded', animateSectionFloat);
 
 // STICKY HERO FADE OUT ON SCROLL - Background stays fixed, content slides up
 window.addEventListener('scroll', () => {
@@ -761,18 +625,127 @@ window.addEventListener('scroll', () => {
   }
 });
 
+// Centered progress bar overlay logic
+window.addEventListener('scroll', () => {
+  const overlay = document.getElementById('about-overlay');
+  const progressBar = document.getElementById('about-scroll-progress');
+  const progressFill = progressBar ? progressBar.querySelector('.progress-bar-fill') : null;
+  const aboutSection = document.getElementById('about');
+  const hero = document.getElementById('hero');
+  if (!overlay || !progressBar || !progressFill || !aboutSection || !hero) return;
+
+  const heroOpacity = parseFloat(window.getComputedStyle(hero).opacity);
+  if (heroOpacity > 0.01) {
+    overlay.classList.remove('visible');
+    overlay.classList.add('hidden');
+    return;
+  }
+
+  const aboutRect = aboutSection.getBoundingClientRect();
+  const windowHeight = window.innerHeight;
+  let progress = 0;
+  if (aboutRect.top < windowHeight && aboutRect.bottom > 0) {
+    progress = Math.max(0, Math.min(1, 6 * (windowHeight - aboutRect.top) / (aboutRect.height + windowHeight))); // Faster progress bar
+  }
+  progressFill.style.width = Math.round(progress * 100) + '%';
+
+  // Hide progress bar when user starts entering experience section
+  const experienceSection = document.getElementById('experience');
+  if (experienceSection) {
+    const expRect = experienceSection.getBoundingClientRect();
+    if (expRect.top <= windowHeight * 0.9) {
+      overlay.classList.add('hidden');
+      overlay.classList.remove('visible');
+      return;
+    }
+  }
+  
+  // Show progress bar if still in about section
+  overlay.classList.add('visible');
+  overlay.classList.remove('hidden');
+  
+  // Fade out about me elements as approaching experience section
+  const hiSticky = document.querySelector('.about-hi-sticky');
+  const hiPhoto = document.querySelector('.about-hi-photo');
+  const hiSubtitle = document.querySelector('.about-hi-subtitle');
+  const para1 = document.querySelector('#para-1');
+  const para2 = document.querySelector('#para-2');
+  const navButtons = document.querySelector('.about-nav-buttons');
+  
+  if (experienceSection) {
+    const expRect = experienceSection.getBoundingClientRect();
+    const fadeStartDistance = windowHeight * 2.0; // Start fading when exp section is 1.4 screen heights away
+    const fadeEndDistance = windowHeight * 1.5; // Fully faded when exp section is 0.6 screen heights away
+    
+    let fadeOpacity = 1;
+    if (expRect.top <= fadeStartDistance && expRect.top >= fadeEndDistance) {
+      fadeOpacity = (expRect.top - fadeEndDistance) / (fadeStartDistance - fadeEndDistance);
+      shouldFadeOut = true;
+      fadeOutOpacity = fadeOpacity;
+    } else if (expRect.top < fadeEndDistance) {
+      fadeOpacity = 0;
+      shouldFadeOut = true;
+      fadeOutOpacity = 0;
+    } else {
+      shouldFadeOut = false;
+      fadeOutOpacity = 1;
+    }
+    
+    // Apply fade to all about me elements if fading out
+    if (shouldFadeOut) {
+      [hiPhoto, hiSubtitle, para1, para2, navButtons].forEach(element => {
+        if (element) {
+          element.style.opacity = fadeOpacity;
+        }
+      });
+      
+      // Only fade out hello text if it's already visible (progress bar completed)
+      if (hiSticky && hiSticky.classList.contains('about-hi-sticky-visible')) {
+        hiSticky.style.opacity = fadeOpacity;
+      }
+    }
+  }
+  
+  if (progress >= 1) {
+    console.log('Progress reached 100%, showing elements:', { hiSticky, hiPhoto });
+    if (hiSticky) hiSticky.classList.add('about-hi-sticky-visible');
+    if (hiPhoto) {
+      hiPhoto.classList.add('about-hi-photo-visible');
+      console.log('Photo element found and visible class added');
+    } else {
+      console.log('Photo element NOT found');
+    }
+    // Hide progress bar and THOMAS.EXE
+    if (progressBar) progressBar.classList.remove('about-system-progress-visible');
+    const thomasExe = document.getElementById('thomas-exe-center');
+    if (thomasExe) thomasExe.classList.remove('about-system-center-visible');
+  } else {
+    overlay.classList.add('visible');
+    overlay.classList.remove('hidden');
+    // Fade out about-hi-sticky and photo
+    const hiSticky = document.querySelector('.about-hi-sticky');
+    const hiPhoto = document.querySelector('.about-hi-photo');
+    if (hiSticky) hiSticky.classList.remove('about-hi-sticky-visible');
+    if (hiPhoto) hiPhoto.classList.remove('about-hi-photo-visible');
+    // Fade in progress bar and THOMAS.EXE
+    if (progressBar) progressBar.classList.add('about-system-progress-visible');
+    const thomasExe = document.getElementById('thomas-exe-center');
+    if (thomasExe) thomasExe.classList.add('about-system-center-visible');
+  }
+});
+
 // --- Enhanced Human Typing Animation for Bio ---
 const humanTypingSequence = [
-  { text: "Hi! I'm ", speed: 75 },
-  { text: "Thomas", speed: 110, bold: true, color: "#000", effect: "glow", boldDelay: 500 },
-  { text: ", an undergraduate mathematics and computer science major at ", speed: 65 },
-  { text: "UPenn", speed: 80, emphasis: true },
-  { pause: 300 },
-  { text: ".", speed: 80 },
-  { text: " I love turning strategic thinking", speed: 65 },
-  { pause: 1000, cursorBlink: "thinking" },
-  { backspace: 26, speed: 40 }, // "turning strategic thinking"
-  { text: "applying game theory and mathematical reasoning into software solutions.", speed: 60 }
+  { text: "Hi! I'm ", speed: 45 },
+  { text: "Thomas", speed: 65, bold: true, color: "#000", effect: "glow", boldDelay: 400 },
+  { text: ", an undergraduate mathematics and computer science major at ", speed: 35 },
+  { text: "UPenn", speed: 50, emphasis: true },
+  { pause: 200 },
+  { text: ".", speed: 50 },
+  { text: " I love turning strategic thinking", speed: 40 },
+  { pause: 800, cursorBlink: "thinking" },
+  { backspace: 26, speed: 25 }, // "turning strategic thinking"
+  { text: "applying game theory and mathematical reasoning into software solutions.", speed: 35 }
 ];
 
 class HumanTypeWriter {
@@ -806,6 +779,8 @@ class HumanTypeWriter {
         this.cursor.classList.remove('thinking');
       }
     }
+    // Bio typing animation is now completely finished
+    console.log('Bio typing animation completed');
   }
 
   boldThomas(color) {
@@ -833,8 +808,8 @@ class HumanTypeWriter {
         this.text += char;
       }
       this.element.innerHTML = this.text;
-      const humanVariation = speed + (Math.random() * 16 - 8);
-      await this.wait(Math.max(humanVariation, 20));
+      const humanVariation = speed + (Math.random() * 25 - 12);
+      await this.wait(Math.max(humanVariation, 15));
     }
   }
 
@@ -858,26 +833,182 @@ class HumanTypeWriter {
   }
 }
 
+// Loading dots animation variables
+let loadingInterval = null;
+let loadingDotCount = 0;
+
+// Function to animate loading dots (keeping "Loading" centered)
+function startLoadingAnimation() {
+  if (!typedEl) return;
+  
+  loadingInterval = setInterval(() => {
+    // Use fixed-width spaces for dots to maintain center alignment
+    const dots = [
+      '   ',     // 0 dots = 3 spaces
+      '.  ',     // 1 dot + 2 spaces
+      '.. ',     // 2 dots + 1 space
+      '...'      // 3 dots
+    ];
+    typedEl.innerHTML = 'Loading' + dots[loadingDotCount];
+    loadingDotCount = (loadingDotCount + 1) % 4; // Cycle through 0, 1, 2, 3 dots
+  }, 500); // Change dots every 500ms
+}
+
+// Function to stop loading animation and delete text via typing
+async function deleteLoadingText() {
+  if (!typedEl) return;
+  
+  // Stop the loading animation
+  if (loadingInterval) {
+    clearInterval(loadingInterval);
+    loadingInterval = null;
+  }
+  
+  const currentText = typedEl.textContent; // Get current loading text with dots
+  console.log('Deleting Loading text:', currentText);
+  
+  // Show cursor for deletion animation
+  typedEl.classList.add('cursor-visible');
+  typedEl.classList.add('typing');
+  
+  // Delete current loading text character by character
+  for (let i = currentText.length; i > 0; i--) {
+    typedEl.textContent = currentText.substring(0, i - 1);
+    await new Promise(resolve => setTimeout(resolve, 60 + Math.random() * 20));
+  }
+  
+  // Clean up: remove typing cursor state after deletion is complete
+  typedEl.classList.remove('typing');
+  
+  // Brief pause with empty field
+  await new Promise(resolve => setTimeout(resolve, 300));
+  
+  console.log('Loading text deleted, ready to start role cycle');
+}
+
 const bioTextEl = document.getElementById('bio-text');
 const bioCursorEl = document.getElementById('bio-cursor');
 
-// Hide role cursor and clear role text initially
+// Initially hide the typed-words element - will show when scrolled
 if (typedEl) {
   typedEl.classList.remove('cursor-visible');
   typedEl.classList.remove('typing');
-  typedEl.textContent = '';
+  typedEl.classList.remove('show'); // Start hidden
+  typedEl.textContent = 'Loading   '; // Prepare loading text
 }
 // Show bio cursor
 if (bioCursorEl) bioCursorEl.style.opacity = 1;
 
+// Variable to track if bio typing is complete
+let bioTypingComplete = false;
+
+// Variable to track if elements should be fading out
+let shouldFadeOut = false;
+let fadeOutOpacity = 1;
+
+// Universal fade-in animation that works on all screen sizes
+function handleElementFadeIn(selector) {
+  const element = document.querySelector(selector);
+  if (!element) return;
+
+  // If elements should be fading out, don't override with fade-in
+  if (shouldFadeOut) {
+    element.style.opacity = fadeOutOpacity;
+    return;
+  }
+
+  const elementRect = element.getBoundingClientRect();
+  const windowHeight = window.innerHeight;
+  
+  // Special handling for buttons - keep them visible once they appear
+  if (selector === '.about-nav-buttons') {
+    // For buttons, once they fade in, keep them visible
+    const fadeStartPoint = windowHeight * 0.9; // Start fading when 90% down viewport
+    const fadeEndPoint = windowHeight * 0.8;   // Fully visible when 80% down viewport
+    
+    let fadeProgress = 0;
+    
+    if (elementRect.top <= fadeStartPoint) {
+      if (elementRect.top >= fadeEndPoint) {
+        // Element is in the fade zone
+        fadeProgress = (fadeStartPoint - elementRect.top) / (fadeStartPoint - fadeEndPoint);
+        fadeProgress = Math.max(0, Math.min(1, fadeProgress));
+      } else {
+        // Element is past fade zone - keep fully visible
+        fadeProgress = 1;
+      }
+    }
+    
+    // Apply fade effect
+    element.style.opacity = fadeProgress;
+    
+    if (fadeProgress > 0) {
+      element.classList.add('fade-in');
+    }
+    return;
+  }
+  
+  // Regular fade-in for other elements
+  const fadeStartPoint = windowHeight * 0.8; // Start fading when 80% down viewport
+  const fadeEndPoint = windowHeight * 0.6;   // Fully visible when 60% down viewport
+  
+  let fadeProgress = 0;
+  
+  if (elementRect.top <= fadeStartPoint && elementRect.top >= fadeEndPoint) {
+    // Element is in the fade zone
+    fadeProgress = (fadeStartPoint - elementRect.top) / (fadeStartPoint - fadeEndPoint);
+    fadeProgress = Math.max(0, Math.min(1, fadeProgress));
+  } else if (elementRect.top < fadeEndPoint) {
+    // Element is past fade zone - fully visible
+    fadeProgress = 1;
+  }
+
+  // Apply fade effect
+  element.style.opacity = fadeProgress;
+
+  if (fadeProgress > 0) {
+    element.classList.add('fade-in');
+  } else {
+    element.classList.remove('fade-in');
+  }
+}
+
+// Handle fade-in for multiple elements - now works on all screen sizes
+function handleAllFadeIns() {
+  handleElementFadeIn('.about-hi-photo');
+  handleElementFadeIn('.about-hi-subtitle');
+  handleElementFadeIn('#para-1');
+  handleElementFadeIn('#para-2');
+  handleElementFadeIn('.about-nav-buttons');
+  
+  // Debug: check if buttons element exists
+  const buttons = document.querySelector('.about-nav-buttons');
+  if (!buttons) {
+    console.log('Buttons element not found!');
+  }
+}
+
+// Add scroll listener for all fade-ins
+window.addEventListener('scroll', handleAllFadeIns);
+window.addEventListener('DOMContentLoaded', handleAllFadeIns);
+
 // Start human typing animation on DOMContentLoaded
 window.addEventListener('DOMContentLoaded', async () => {
-  const typewriter = new HumanTypeWriter(bioTextEl, bioCursorEl);
-  await typewriter.type(humanTypingSequence);
-  // Hide bio cursor, show role cursor, start role typing after 1s delay
-  if (bioCursorEl) bioCursorEl.style.opacity = 0;
-  setTimeout(() => {
-    if (typedEl) typedEl.classList.add('cursor-visible');
-    typeRole();
-  }, 1000);
-});
+  // Start bio typing first
+  if (bioTextEl && bioCursorEl) {
+    const typewriter = new HumanTypeWriter(bioTextEl, bioCursorEl);
+    
+    // Wait for bio typing to completely finish
+    await typewriter.type(humanTypingSequence);
+    
+    // Hide bio cursor after bio typing is 100% complete
+    if (bioCursorEl) bioCursorEl.style.opacity = 0;
+    
+    // Mark bio typing as complete
+    bioTypingComplete = true;
+    console.log('Bio typing completed, waiting for user to scroll to loading text');
+    
+    // Don't automatically start role typing - wait for user to see the loading animation first
+    // Role typing will start when loading animation is deleted after user scrolls
+  }
+});d

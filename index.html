@@ -20,8 +20,6 @@
   <script defer src="script.js"></script>
 </head>
 <body>
-  <div class="minimal-grid-line"></div>
-
   <!-- Cursor flashlight -->
   <div class="cursor-light"></div>
 
@@ -53,7 +51,6 @@
 
   <!-- HERO - Fixed Background -->
   <section id="hero" class="panel hero">
-    <div id="tsparticles"></div>
     <div class="hero-typing-card">
       <h2 class="typed-words"></h2>
     </div>
@@ -74,92 +71,225 @@
     </div>
   </div>
 
+  <!-- CENTERED PROGRESS BAR BLOCK -->
+  <div id="about-overlay" class="about-overlay visible">
+    <div class="about-overlay-center">
+      <div id="thomas-exe-center" class="about-system-center">THOMAS.EXE v2.1.0 - Neural Processing Unit</div>
+      <div id="about-scroll-progress" class="about-system-progress">
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ABOUT -->
   <section id="about" class="panel">
     <div class="container">
-      <!-- Full-width quote -->
-      <div class="about-quote-full">
-        <p>I believe many of today's toughest challenges can be tackled through mathematics and algorithmic reasoning.</p>
+      <!-- Initial spacer before Thomas text -->
+      <div style="height: 100vh;"></div>
+      
+      <!-- Thomas text appears first -->
+      <div class="about-hi-sticky">HELLO. I AM THOMAS
+        <span class="about-hi-sub">Thomas Ou</span>
       </div>
       
-      <!-- Main about content -->
-      <div class="about-intro-section">
-          <div class="about-content">
-            <div class="about-left">
-              <div class="greeting-photo-container">
-                <h2>Hi, I'm Thomas.</h2>
-                <div class="about-photo">
-                  <div class="photo-placeholder" style="width:180px;height:180px;border-radius:50%;background:linear-gradient(135deg, #1e90ff, #00c6fb);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(0,0,0,0.18);"><span style="color:white;font-size:3rem;font-weight:700;">TO</span></div>
-                </div>
-              </div>
-            </div>
-            <div class="about-right">
-              <p class="about-welcome">Welcome to my portfolio website.</p>
-              <div style="height:1rem;"></div>
-              <p>I'm an undergraduate student who just really love poker and game theory. Fortunately, I've turned this love for strategic reasoning into something marketable. From machines learning to quantitive finance to scalable backend infrastructure, I've been able to create tools that learn, adapt, and perform.  I specialize in building full-stack systems and large language models.</p>
-              <div style="height:1rem;"></div>
-              <a href="#journey" class="journey-btn">See My Journey <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M7 5l5 5-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-            </div>
-          </div>
+      <!-- Spacer to delay photo appearance -->
+      <div style="height: 150vh;"></div>
+      
+      <!-- Photo appears further down in same spacer -->
+      <div class="about-hi-photo">
+        <img src="ThomasPortrait.jpg" alt="Thomas Ou Portrait" />
       </div>
       
-      <!-- Education section with more spacing -->
-      <div class="education-section">
-        <div class="education-content">
-          <div class="education-left">
-            <h2>Education</h2>
-          </div>
-          <div class="education-right">
-            <div class="education-item">
-              <div class="timeline-vertical">
-                <div class="degree-timeline">
-                  <div class="timeline-node"></div>
-                  <div>
-                    <h3>University of Pennsylvania</h3>
-                    <p class="degree" style="text-align:left;"><em>Bachelor of Arts in Mathematics</em></p>
-                    <p class="details"><strong>Relevant Coursework:</strong> Game Theory, Probability Theory, Mathematical Optimization, Advanced Calculus, Linear Algebra, Probability & Statistics, Mathematical Programming, Combinatorics, Financial Mathematics</p>
-                    <p class="degree" style="text-align:left;"><em>Master of Science in Engineering in Computer Science</em></p>
-                    <p class="details"><strong>Relevant Coursework:</strong> Artificial Intelligence, Machine Learning, Algorithms & Data Structures, Computer Systems, Scalable Backend Infrastructure, Programming Languages, Software Engineering</p>
-                  </div>
-                </div>
-                <div class="degree-timeline">
-                  <div class="timeline-node"></div>
-                  <div>
-                    <h3>University of Connecticut</h3>
-                    <p class="degree" style="text-align:left;"><em>Dual Enrollment</em></p>
-                    <p class="details"><strong>Coursework:</strong> HIST 1400 Modern Western Traditions, MATH 1131Q Calculus I, MATH 1132Q Calculus II, MATH 2110Q Multivariable Calculus</p>
-                  </div>
-                </div>
-                <div class="degree-timeline">
-                  <div class="timeline-node"></div>
-                  <div>
-                    <h3>Trumbull High School</h3>
-                    <p class="degree" style="text-align:left;"><em>High School Diploma</em></p>
-                    <p class="details">1590 SAT, Summa Cum Laude (Top 2%)</p>
-                    <p class="details"><strong>Coursework:</strong> General Studies</p>
-                  </div>
-                </div>
-              </div>
+      <!-- Spacer to delay subtitle -->
+      <div style="height: 40vh;"></div>
+      
+      <!-- Subtitle appears after photo -->
+      <div class="about-hi-subtitle">A Bit About Me</div>
+      
+      <!-- Spacer to delay descriptions -->
+      <div style="height: 30vh;"></div>
+      
+      <!-- First description paragraph block -->
+      <div class="about-description-paragraph" id="para-1">
+        I'm just a guy with two passions: coffee and poker. Thankfully, I've been able to turn the latter of the two into a career path (still working on the first one).
+      </div>
+      
+      <!-- Spacer between paragraph blocks -->
+      <div style="height: 60vh;"></div>
+      
+      <!-- Second description paragraph block -->
+      <div class="about-description-paragraph" id="para-2">
+        From machine learning to quantitative finance to scalable backend infrastructure, I've been able to use my love for game theory and probabilistic thinking to create tools that learn, adapt, and perform.
+      </div>
+      
+      <!-- Spacer before buttons -->
+      <div style="height: 50vh;"></div>
+      
+      <!-- Navigation buttons -->
+      <div class="about-nav-buttons">
+        <button class="about-nav-btn">Resume</button>
+        <button class="about-nav-btn">Experience</button>
+        <button class="about-nav-btn">Projects</button>
+        <button class="about-nav-btn">Personal</button>
+      </div>
+      
+      <!-- Extra spacer at end -->
+      <div style="height: 150vh;"></div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE SECTION -->
+  <section id="experience" class="panel">
+    <div class="container">
+      <!-- Section title -->
+      <div class="section-title">
+        <h2>Experience</h2>
+      </div>
+      
+      <!-- Education subsection -->
+      <div class="experience-subsection">
+        <h3 class="subsection-title">Education</h3>
+        
+        <div class="experience-content">
+          <div class="experience-item">
+            <div class="experience-header">
+              <h3>Bachelor of Arts in Mathematics</h3>
+              <span class="company">University of Pennsylvania</span>
+              <span class="duration">2022 - 2026</span>
+            </div>
+            <div class="experience-description">
+              <p>Pursuing a comprehensive mathematics degree with focus on applied mathematics, statistics, and computational methods. Concentrating in probability theory and statistical analysis with applications to machine learning and quantitative finance.</p>
+              <ul>
+                <li>Relevant Coursework: Linear Algebra, Real Analysis, Probability Theory, Mathematical Statistics, Stochastic Processes, Mathematical Finance</li>
+                <li>GPA: 3.8/4.0 - Dean's List recognition for academic excellence</li>
+                <li>Active member of the Mathematics Society and Quantitative Finance Club</li>
+                <li>Research focus: Statistical modeling and probabilistic machine learning algorithms</li>
+              </ul>
             </div>
           </div>
         </div>
       </div>
-      
-      <!-- My Stack section -->
-      <div class="stack-section">
-        <h2 class="stack-heading">My Stack</h2>
-        <div class="stack-grid">
-          <div class="tech">Python</div>
-          <div class="tech">Java</div>
-          <div class="tech">OCaml</div>
-          <div class="tech">R</div>
-          <div class="tech">HTML/CSS</div>
-          <div class="tech">PyTorch</div>
-          <div class="tech">SQL</div>
-          <div class="tech">Scikit-learn</div>
-          <div class="tech">Pandas</div>
-          <div class="tech">NumPy</div>
-          <div class="tech">Matplotlib</div>
+
+      <!-- Professional Experience subsection -->
+      <div class="experience-subsection">
+        <h3 class="subsection-title">Professional Experience</h3>
+        
+        <div class="experience-content">
+          <div class="experience-item">
+            <div class="experience-header">
+              <h3>Quantitative Research Intern</h3>
+              <span class="company">Proprietary Trading Firm</span>
+              <span class="duration">Summer 2024</span>
+            </div>
+            <div class="experience-description">
+              <p>Developed quantitative trading strategies using statistical analysis and machine learning techniques. Applied game theory principles to optimize trading algorithms in high-frequency environments.</p>
+              <ul>
+                <li>Built predictive models using Python, NumPy, and scikit-learn for market data analysis</li>
+                <li>Implemented backtesting frameworks to evaluate strategy performance across multiple asset classes</li>
+                <li>Achieved 15% improvement in risk-adjusted returns through statistical arbitrage strategies</li>
+                <li>Collaborated with senior quants to optimize portfolio allocation using modern portfolio theory</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="experience-item">
+            <div class="experience-header">
+              <h3>Software Engineering Intern</h3>
+              <span class="company">Fintech Startup</span>
+              <span class="duration">Summer 2023</span>
+            </div>
+            <div class="experience-description">
+              <p>Developed scalable backend infrastructure for a cryptocurrency trading platform. Built real-time data processing systems handling millions of transactions daily.</p>
+              <ul>
+                <li>Designed and implemented RESTful APIs using Node.js, Express, and PostgreSQL</li>
+                <li>Built real-time WebSocket connections for live market data streaming</li>
+                <li>Optimized database queries resulting in 40% reduction in response times</li>
+                <li>Implemented automated testing suites achieving 95% code coverage</li>
+                <li>Collaborated in agile development environment using Git, Docker, and AWS services</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="experience-item">
+            <div class="experience-header">
+              <h3>Research Assistant</h3>
+              <span class="company">University of Pennsylvania - Mathematics Department</span>
+              <span class="duration">Fall 2023 - Present</span>
+            </div>
+            <div class="experience-description">
+              <p>Conducting research in applied probability and statistical machine learning under faculty supervision. Focus on developing novel algorithms for financial risk assessment.</p>
+              <ul>
+                <li>Developed Monte Carlo simulation methods for complex derivative pricing models</li>
+                <li>Implemented machine learning algorithms for credit risk assessment using TensorFlow</li>
+                <li>Published findings in undergraduate research symposium</li>
+                <li>Collaborated with graduate students on multi-variate statistical analysis projects</li>
+                <li>Presented research at regional mathematics conferences</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Additional Experience subsection -->
+      <div class="experience-subsection">
+        <h3 class="subsection-title">Additional Experience</h3>
+        
+        <div class="experience-content">
+          <div class="experience-item">
+            <div class="experience-header">
+              <h3>Professional Poker Player</h3>
+              <span class="company">Online & Live Tournaments</span>
+              <span class="duration">2020 - Present</span>
+            </div>
+            <div class="experience-description">
+              <p>Applied advanced game theory, probability analysis, and statistical modeling to competitive poker. Developed systematic approaches to decision-making under uncertainty.</p>
+              <ul>
+                <li>Achieved consistent profitability over 4+ years with ROI exceeding industry standards</li>
+                <li>Specialized in tournament strategy optimization using Nash equilibrium concepts</li>
+                <li>Built custom analysis tools using Python for hand history review and opponent modeling</li>
+                <li>Developed bankroll management strategies based on risk of ruin calculations</li>
+                <li>Applied machine learning techniques for pattern recognition in opponent behavior</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="experience-item">
+            <div class="experience-header">
+              <h3>Mathematics & Statistics Tutor</h3>
+              <span class="company">Freelance & University Tutoring Center</span>
+              <span class="duration">2022 - Present</span>
+            </div>
+            <div class="experience-description">
+              <p>Provided personalized instruction in advanced mathematics and statistics to undergraduate and graduate students. Specialized in probability theory, statistical inference, and computational methods.</p>
+              <ul>
+                <li>Tutored 50+ students in calculus, linear algebra, probability theory, and statistical analysis</li>
+                <li>Developed custom learning materials and problem sets tailored to individual learning styles</li>
+                <li>Achieved 98% student satisfaction rate with significant grade improvements</li>
+                <li>Created interactive Python notebooks for statistical computing demonstrations</li>
+                <li>Mentored students in research methodology and mathematical proof techniques</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="experience-item">
+            <div class="experience-header">
+              <h3>Data Analysis Consultant</h3>
+              <span class="company">Local Businesses</span>
+              <span class="duration">2023 - Present</span>
+            </div>
+            <div class="experience-description">
+              <p>Provided data analysis and statistical consulting services to small businesses. Specialized in customer behavior analysis, sales forecasting, and operational optimization.</p>
+              <ul>
+                <li>Analyzed customer data using Python and R to identify trends and optimization opportunities</li>
+                <li>Built predictive models for inventory management and demand forecasting</li>
+                <li>Created automated reporting dashboards using Tableau and Power BI</li>
+                <li>Implemented A/B testing frameworks to optimize marketing campaigns</li>
+                <li>Increased client revenue by average of 25% through data-driven recommendations</li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -238,9 +368,6 @@
       });
     });
 
-    // Start role typing animation immediately
-    setTimeout(() => {
-      typeRole();
-    }, 2000);
+    // Role typing will be started after bio completes via script.js
   </script>
 </html>
